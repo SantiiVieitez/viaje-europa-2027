@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Europa agosto 2027</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Layout: hero nocturno con vuelo animado → mapa de ruta → comparador de vuelos → presupuesto → alojamiento → datos útiles */
+  --ink:#121a3a;
+  --ink-2:#1d2752;
+  --paper:#f4f1ea;
+  --card:#fffdf8;
+  --line:#e2ddd0;
+  --muted:#686c7e;
+  --accent:#ee5a36;
+  --sun:#f3b63b;
+  --good:#1f8a5b;
+  --warn:#c77a12;
+  --bad:#c23b3b;
+  --bcn:#e8553d; --ibz:#16a097; --rom:#c38a17; --ams:#3a6fe0; --par:#8a4fd0;
+  --f-display:"Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --f-body:"Instrument Sans", "Helvetica Neue", system-ui, sans-serif;
+  --f-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:-.01em}
+.num{font-variant-numeric:tabular-nums}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+section{padding:64px 0}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+.h2{font-size:clamp(28px,4vw,42px);font-weight:800;line-height:1.05}
+.lead{color:var(--muted);max-width:62ch;margin:12px 0 0}
+:focus-visible{outline:3px solid var(--sun);outline-offset:2px;border-radius:6px}
+
+/* ---------- HERO ---------- */
+.hero{background:radial-gradient(1200px 500px at 80% -10%,#2b3a7a 0%,transparent 60%),var(--ink);color:#f4f1ea;position:relative;overflow:hidden;padding:0}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hero-inner{position:relative;padding:56px 20px 48px;max-width:1120px;margin:0 auto;display:grid;gap:28px}
+.hero .eyebrow{color:var(--sun)}
+.hero h1{font-size:clamp(44px,8vw,96px);font-weight:800;line-height:.92}
+.hero h1 span{display:block}
+.hero h1 .stroke{color:transparent;-webkit-text-stroke:2px #f4f1ea}
+.route-line{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-weight:600}
+.route-line .chip{padding:6px 12px;border-radius:999px;font-size:14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18)}
+.route-line .arr{opacity:.5}
+.countdown{display:flex;gap:12px;flex-wrap:wrap}
+.cd{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:14px;padding:12px 16px;min-width:92px}
+.cd b{display:block;font-family:var(--f-display);font-size:36px;line-height:1;font-variant-numeric:tabular-nums}
+.cd small{font-size:12px;opacity:.7;text-transform:uppercase;letter-spacing:.1em}
+.hero-meta{display:flex;flex-wrap:wrap;gap:18px;font-size:14px;opacity:.85}
+.hero-meta a{color:var(--sun);font-weight:600}
+
+/* ---------- reveal (visible en reposo; anima al entrar) ---------- */
+.rv.play{animation:rise .7s cubic-bezier(.2,.7,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+
+/* ---------- MAPA ---------- */
+.map-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:28px;margin-top:28px;align-items:start}
+.map-card{background:var(--ink);border-radius:22px;padding:10px;position:relative;overflow:hidden}
+.map-card svg{width:100%;height:auto;display:block}
+.grat{stroke:rgba(255,255,255,.07);stroke-width:1}
+.grat-lbl{fill:rgba(255,255,255,.3);font:10px var(--f-mono)}
+.leg{fill:none;stroke-width:2.5;stroke-linecap:round}
+.leg.draw{animation:draw 1.4s ease-out both}
+@keyframes draw{from{stroke-dashoffset:var(--len)}to{stroke-dashoffset:0}}
+.city-lbl{fill:#fff;font:700 15px var(--f-display)}
+.city-sub{fill:rgba(255,255,255,.6);font:11px var(--f-body)}
+.leg-lbl{fill:var(--sun);font:600 10px var(--f-body)}
+.pulse{transform-box:fill-box;transform-origin:center;animation:pulse 2.4s ease-out infinite}
+@keyframes pulse{0%{transform:scale(1);opacity:.6}100%{transform:scale(3.2);opacity:0}}
+.days{display:grid;grid-template-columns:repeat(13,1fr);gap:4px;margin-top:6px}
+.day{border-radius:8px;padding:8px 2px;text-align:center;color:#fff;font-weight:700;font-size:13px;position:relative}
+.day small{display:block;font-weight:500;font-size:10px;opacity:.85}
+.stops{display:grid;gap:10px}
+.stop{display:grid;grid-template-columns:10px 1fr auto;gap:14px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 16px}
+.stop .bar{width:10px;align-self:stretch;border-radius:6px}
+.stop h3{font-size:19px}
+.stop p{margin:2px 0 0;font-size:14px;color:var(--muted)}
+.stop .n{font-family:var(--f-display);font-size:26px;font-weight:800;text-align:right;line-height:1}
+.stop .n small{display:block;font-family:var(--f-body);font-size:11px;font-weight:600;color:var(--muted)}
+.transit{font-size:13px;color:var(--muted);padding-left:24px;display:flex;gap:8px;align-items:center}
+.transit::before{content:"";width:2px;height:16px;background:var(--line)}
+
+/* ---------- TIEMPO LIBRE ---------- */
+.free-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-top:26px}
+.free-total{font-family:var(--f-display);font-weight:800;font-size:clamp(48px,7vw,80px);line-height:.9}
+.free-total small{font-family:var(--f-body);font-size:15px;font-weight:600;color:var(--muted);display:block;margin-top:6px}
+.mini-opts{display:flex;gap:6px;flex-wrap:wrap}
+.mini-opts button{all:unset;cursor:pointer;width:38px;height:38px;border-radius:10px;display:grid;place-items:center;font-family:var(--f-display);font-weight:800;color:#fff;opacity:.4;transition:opacity .25s,transform .25s}
+.mini-opts button[aria-pressed="true"]{opacity:1;transform:translateY(-3px);box-shadow:0 8px 18px -8px rgba(18,26,58,.6)}
+.mini-opts button:focus-visible{outline:3px solid var(--sun)}
+.free{display:grid;gap:14px;margin-top:24px}
+.fr{display:grid;grid-template-columns:150px 1fr 110px;gap:16px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 18px}
+.fr h3{font-size:18px}
+.fr .when{font-size:12px;color:var(--muted);line-height:1.35;margin-top:2px}
+.fr .tr{height:22px;background:#ece7db;border-radius:8px;overflow:hidden;position:relative}
+.fr .tr i{position:absolute;inset:0 auto 0 0;border-radius:8px;transition:width 1.1s cubic-bezier(.2,.8,.2,1)}
+.fr .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.fr .chips span{font-size:11px;font-weight:600;background:#f1ece0;border-radius:999px;padding:2px 8px;font-variant-numeric:tabular-nums}
+.fr .chips span.zero{opacity:.45}
+.fr .h{text-align:right;font-family:var(--f-display);font-weight:800;font-size:28px;line-height:1}
+.fr .h small{display:block;font-family:var(--f-body);font-size:11px;font-weight:600;color:var(--muted);margin-top:3px}
+.fr.extra{border-style:dashed}
+.free-note{font-size:13px;color:var(--muted);margin-top:16px;max-width:80ch}
+.stop .free-h{font-size:12px;font-weight:700;color:var(--ink);background:#f1ece0;border-radius:999px;padding:2px 8px;display:inline-block;margin-top:4px}
+.opt .fh{font-size:12px;color:var(--muted);font-weight:600}
+@media (max-width:640px){.fr{grid-template-columns:1fr 80px}.fr .tr-wrap{grid-column:1/-1;grid-row:2}}
+
+/* ---------- SWITCH VALIJA ---------- */
+.swrow{display:flex;align-items:center;gap:14px 28px;margin-top:22px;flex-wrap:wrap}
+.sw{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:12px;font-weight:700;font-size:15px}
+.sw .lbl{opacity:.45;transition:opacity .3s}
+.sw .lbl.on{opacity:1}
+.sw .swt{width:64px;height:34px;border-radius:999px;background:rgba(255,255,255,.18);position:relative;transition:background .35s;margin:0;padding:0;overflow:visible;flex:none}
+.sw .knob{font-family:var(--f-display);font-weight:800;color:var(--ink);position:absolute;top:4px;left:4px;width:26px;height:26px;border-radius:50%;background:#fff;display:grid;place-items:center;font-size:14px;transition:transform .45s cubic-bezier(.3,1.5,.5,1);box-shadow:0 3px 8px rgba(0,0,0,.25)}
+.sw[aria-checked="true"] .swt{background:var(--sun)}
+.sw[aria-checked="true"] .knob{transform:translateX(30px) rotate(360deg)}
+.sw:focus-visible .swt{outline:3px solid var(--sun);outline-offset:3px}
+.sw.light .swt{background:#d9d3c4}
+.sw.light[aria-checked="true"] .swt{background:var(--ink)}
+.swrow .hint{font-size:13px;opacity:.7}
+
+/* ---------- VEREDICTO ---------- */
+.verdict{display:grid;grid-template-columns:.9fr 1.1fr;gap:20px;margin-top:26px}
+.vcard{background:var(--ink);color:#f4f1ea;border-radius:22px;padding:26px;position:relative;overflow:hidden}
+.vcard::before{content:"";position:absolute;width:260px;height:260px;border-radius:50%;right:-80px;top:-80px;background:radial-gradient(circle,rgba(138,79,208,.55),transparent 70%);animation:glow 4s ease-in-out infinite alternate}
+@keyframes glow{to{transform:scale(1.25) translate(-20px,20px)}}
+.vcard .badge{display:inline-flex;gap:8px;align-items:center;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--sun)}
+.vcard .big{display:flex;gap:16px;align-items:center;margin:14px 0 6px;position:relative}
+.vcard .big .letter{font-family:var(--f-display);font-weight:800;font-size:44px;width:72px;height:72px;border-radius:18px;display:grid;place-items:center;background:#8a4fd0}
+.vcard .big h3{font-size:28px;line-height:1.05}
+.vcard .big small{display:block;font-size:14px;opacity:.75;font-family:var(--f-body);font-weight:500;margin-top:4px}
+.vcard ul{list-style:none;padding:0;margin:18px 0 0;display:grid;gap:12px;position:relative}
+.vcard li{display:grid;grid-template-columns:26px 1fr;gap:10px;font-size:15px}
+.vcard li b{color:#fff}
+.vcard li .ic{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:rgba(255,255,255,.1);font-size:13px}
+.vcard .cav{margin-top:18px;font-size:13px;background:rgba(243,182,59,.12);border:1px solid rgba(243,182,59,.35);border-radius:12px;padding:10px 12px;position:relative}
+.vcard .alt{margin-top:12px;font-size:13px;opacity:.8;position:relative}
+.vtable td,.vtable th{padding:10px 8px;text-align:right}
+.vtable td:first-child,.vtable th:first-child{text-align:left;white-space:nowrap}
+.vtable td.num{white-space:nowrap}
+.vtable tr.sel td{background:#f1ecfb}
+.vtable td.best{color:var(--good);font-weight:800}
+.vtable td.worst{color:var(--bad)}
+.vtable .lt{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:7px;color:#fff;font-family:var(--f-display);font-weight:800;margin-right:8px;font-size:13px}
+.vtable .flojo{font-size:12px;color:var(--muted);text-align:left}
+@media (max-width:900px){.verdict{grid-template-columns:1fr}}
+
+/* ---------- CONTROLES ---------- */
+.controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:26px 0 18px;position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(8px);padding:10px 0;border-bottom:1px solid var(--line)}
+.seg{display:inline-flex;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px;gap:2px}
+.seg button{all:unset;cursor:pointer;padding:8px 14px;border-radius:999px;font-weight:600;font-size:14px;color:var(--muted);transition:background .25s,color .25s}
+.seg button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.seg button:focus-visible{outline:3px solid var(--sun)}
+.ctl-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+
+/* ---------- OPCIONES ---------- */
+.opt-tabs{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.opt{all:unset;box-sizing:border-box;cursor:pointer;background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:14px;display:grid;gap:4px;position:relative;transition:transform .25s,border-color .25s,box-shadow .25s}
+.opt:hover{transform:translateY(-3px)}
+.opt[aria-pressed="true"]{border-color:var(--ink);box-shadow:0 10px 30px -14px rgba(18,26,58,.5)}
+.opt .letter{font-family:var(--f-display);font-weight:800;font-size:26px;line-height:1;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:#fff}
+.opt .nm{font-weight:700;font-size:14px;line-height:1.25}
+.opt .pr{font-family:var(--f-display);font-weight:800;font-size:22px}
+.opt .pr small{font-family:var(--f-body);font-size:12px;color:var(--muted);font-weight:500}
+.opt .tag{position:absolute;top:12px;right:12px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;background:var(--good);color:#fff;padding:3px 8px;border-radius:999px}
+.detail{display:grid;grid-template-columns:1.25fr .75fr;gap:20px;margin-top:20px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px}
+.panel h3{font-size:22px}
+.panel .sub{color:var(--muted);font-size:14px;margin-top:4px}
+.trip{margin-top:20px}
+.trip-h{display:flex;justify-content:space-between;gap:12px;align-items:baseline;flex-wrap:wrap}
+.trip-h b{font-size:13px;text-transform:uppercase;letter-spacing:.1em}
+.trip-h span{font-size:13px;color:var(--muted)}
+.trip-h .dur{font-family:var(--f-display);font-weight:800;font-size:18px;color:var(--ink)}
+.track{display:flex;align-items:flex-start;margin:14px 0 6px;overflow-x:auto;padding-bottom:6px}
+.node{display:grid;justify-items:center;min-width:64px;text-align:center}
+.node .dot{width:14px;height:14px;border-radius:50%;background:var(--ink);border:3px solid var(--card);box-shadow:0 0 0 2px var(--ink)}
+.node.mid .dot{background:var(--sun);box-shadow:0 0 0 2px var(--sun)}
+.node .code{font-family:var(--f-mono);font-weight:700;font-size:14px;margin-top:6px}
+.node .t{font-size:12px;color:var(--muted);line-height:1.3}
+.node .lay{margin-top:4px;font-size:11px;font-weight:700;background:#fdf0d2;color:#7a5410;padding:2px 7px;border-radius:999px;white-space:nowrap}
+.seg-line{flex:1;min-width:40px;height:2px;margin-top:7px;background:repeating-linear-gradient(90deg,var(--ink) 0 6px,transparent 6px 11px);position:relative;background-size:22px 2px;animation:flow 1s linear infinite}
+@keyframes flow{to{background-position:22px 0}}
+.seg-line .pl{position:absolute;top:-9px;left:0;font-size:14px;animation:fly 3.2s ease-in-out infinite}
+@keyframes fly{0%{left:0;opacity:0}10%{opacity:1}90%{opacity:1}100%{left:calc(100% - 14px);opacity:0}}
+.seg-line.train{background:repeating-linear-gradient(90deg,var(--par) 0 3px,transparent 3px 6px)}
+.carrier{font-size:12px;color:var(--muted)}
+.note{font-size:13px;color:var(--muted);background:#f6f2e8;border-radius:12px;padding:10px 12px;margin-top:14px}
+.breakdown{display:grid;gap:10px;margin-top:16px}
+.brow{display:flex;justify-content:space-between;gap:10px;font-size:15px;padding-bottom:8px;border-bottom:1px dashed var(--line)}
+.brow span:last-child{font-variant-numeric:tabular-nums;font-weight:600}
+.btotal{display:flex;justify-content:space-between;align-items:baseline;margin-top:6px}
+.btotal b{font-family:var(--f-display);font-size:40px;font-weight:800;line-height:1}
+.pill{display:inline-block;font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px}
+.pill.good{background:#dff2e8;color:var(--good)}
+.pill.warn{background:#fbeccd;color:#8a5a08}
+.pill.bad{background:#f7dede;color:var(--bad)}
+
+/* duraciones */
+.chart{margin-top:22px}
+.crow{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:center;margin-bottom:10px;cursor:pointer}
+.crow .lt{font-family:var(--f-display);font-weight:800;color:#fff;width:28px;height:28px;border-radius:8px;display:grid;place-items:center;font-size:15px}
+.bars{display:grid;gap:4px}
+.bt{height:12px;border-radius:6px;background:#ece7db;position:relative;overflow:hidden}
+.bt i{position:absolute;inset:0 auto 0 0;border-radius:6px;transition:width 1s cubic-bezier(.2,.8,.2,1)}
+.bt em{position:absolute;right:6px;top:-2px;font-style:normal;font-size:11px;font-weight:700;color:var(--ink)}
+.crow.dim{opacity:.45}
+.legend{display:flex;gap:16px;font-size:12px;color:var(--muted);margin-bottom:10px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+
+/* ---------- PRESUPUESTO ---------- */
+.budget{background:var(--ink);color:#f4f1ea}
+.budget .lead{color:rgba(244,241,234,.7)}
+.budget .eyebrow{color:var(--sun)}
+.big-total{display:flex;flex-wrap:wrap;gap:30px;align-items:flex-end;margin-top:28px}
+.big-total .v{font-family:var(--f-display);font-weight:800;font-size:clamp(64px,11vw,128px);line-height:.9;letter-spacing:-.03em}
+.big-total .v sup{font-size:.3em;vertical-align:top;margin-right:6px;opacity:.7}
+.big-total .ctx{font-size:15px;opacity:.8;max-width:34ch;padding-bottom:10px}
+.stack{display:flex;height:54px;border-radius:14px;overflow:hidden;margin-top:28px;background:rgba(255,255,255,.06)}
+.stack div{transition:flex-grow 1s cubic-bezier(.2,.8,.2,1),padding .4s;min-width:0;display:flex;align-items:center;padding:0 12px;font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;color:#121a3a}
+.stack-key{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px 24px;margin-top:16px}
+.sk{display:flex;gap:10px;align-items:center;font-size:14px}
+.sk i{width:14px;height:14px;border-radius:4px;flex:none}
+.sk b{margin-left:auto;font-variant-numeric:tabular-nums;white-space:nowrap}
+.sk.zero{opacity:.4}
+.cmp{display:grid;gap:10px;margin-top:40px}
+.cmp-row{display:grid;grid-template-columns:30px 1fr 80px;gap:12px;align-items:center;cursor:pointer}
+.cmp-row .lt{font-family:var(--f-display);font-weight:800;width:30px;height:30px;border-radius:8px;display:grid;place-items:center;color:#fff}
+.cmp-row .tr{height:16px;background:rgba(255,255,255,.08);border-radius:8px;overflow:hidden}
+.cmp-row .tr i{display:block;height:100%;border-radius:8px;transition:width 1s cubic-bezier(.2,.8,.2,1)}
+.cmp-row .val{text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
+.cmp-row.dim{opacity:.5}
+.cmp-row .nm{font-size:12px;opacity:.75;margin-bottom:3px}
+
+/* ---------- ALOJAMIENTO ---------- */
+.lodges{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-top:28px}
+.lodge{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;transition:transform .3s,box-shadow .3s}
+.lodge:hover{transform:translateY(-4px);box-shadow:0 18px 40px -22px rgba(18,26,58,.45)}
+.lodge .top{padding:18px 18px 14px;color:#fff;position:relative;overflow:hidden}
+.lodge .top::after{content:"";position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.12)}
+.lodge .top small{font-size:12px;font-weight:600;opacity:.9}
+.lodge .top h3{font-size:26px;font-weight:800}
+.lodge .body{padding:16px 18px;display:grid;gap:10px;flex:1}
+.lodge .nm{font-weight:700}
+.lodge .addr{font-size:14px;color:var(--muted)}
+.lodge .pp{display:flex;gap:16px}
+.lodge .pp div{flex:1;background:#f6f2e8;border-radius:12px;padding:8px 10px}
+.lodge .pp b{font-family:var(--f-display);font-size:22px;display:block;line-height:1.1}
+.lodge .pp small{font-size:11px;color:var(--muted);font-weight:600}
+.lodge .links{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
+.btn{display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-weight:600;font-size:13px;padding:8px 12px;border-radius:999px;border:1.5px solid var(--ink)}
+.btn.solid{background:var(--ink);color:#fff}
+
+/* ---------- INFO ---------- */
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:28px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);padding:8px 8px 8px 0;border-bottom:1px solid var(--line)}
+td{padding:10px 8px 10px 0;border-bottom:1px solid var(--line);vertical-align:top}
+td.r,th.r{text-align:right}
+.tbl{overflow-x:auto}
+.legs-table td:first-child{white-space:nowrap;font-weight:600}
+.ibz-bars{display:grid;gap:8px;margin-top:14px}
+.ib{display:grid;grid-template-columns:150px 1fr 60px;gap:10px;align-items:center;font-size:14px}
+.ib .tr{height:10px;background:#ece7db;border-radius:6px;overflow:hidden}
+.ib .tr i{display:block;height:100%;background:var(--ibz);border-radius:6px}
+.ib.sel .tr i{background:var(--ink)}
+footer{padding:36px 0 60px;color:var(--muted);font-size:13px}
+
+@media (max-width:900px){
+  .map-grid,.detail,.info-grid{grid-template-columns:1fr}
+  .opt-tabs{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+}
+@media (max-width:520px){
+  .days{grid-template-columns:repeat(7,1fr)}
+  .ib{grid-template-columns:110px 1fr 52px}
+  .cd{min-width:74px}.cd b{font-size:28px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero" id="top">
+  <canvas id="sky" aria-hidden="true"></canvas>
+  <div class="hero-inner">
+    <div>
+      <div class="eyebrow">7 amigos (quizás 8) · 08 → 20 de agosto 2027</div>
+      <h1><span>Europa</span><span class="stroke">agosto 27</span></h1>
+    </div>
+    <div class="route-line" aria-label="Recorrido">
+      <span class="chip">Buenos Aires</span><span class="arr">→</span>
+      <span class="chip" style="border-color:var(--bcn)">Barcelona</span><span class="arr">→</span>
+      <span class="chip" style="border-color:var(--ibz)">Ibiza</span><span class="arr">→</span>
+      <span class="chip" style="border-color:var(--rom)">Roma</span><span class="arr">→</span>
+      <span class="chip" style="border-color:var(--ams)">Ámsterdam</span><span class="arr">→</span>
+      <span class="chip" style="border-color:var(--par)">París</span><span class="arr">→</span>
+      <span class="chip">Buenos Aires</span>
+    </div>
+    <div class="countdown" aria-label="Cuenta regresiva a la salida (sábado 7 de agosto 2027)">
+      <div class="cd"><b id="cd-d" class="num">—</b><small>días</small></div>
+      <div class="cd"><b id="cd-h" class="num">—</b><small>horas</small></div>
+      <div class="cd"><b id="cd-m" class="num">—</b><small>min</small></div>
+      <div class="cd"><b id="cd-s" class="num">—</b><small>seg</small></div>
+    </div>
+    <div class="hero-meta">
+      <span>5 ciudades · 12 noches · 4 tramos dentro de Europa · <b id="hero-free"></b></span>
+      <a href="https://docs.google.com/spreadsheets/d/1_GoG4Saj0sEkQXVtvIiNgpTVODGWzY2e9A-bbSQGl68/edit">Abrir la planilla ↗</a>
+    </div>
+  </div>
+</header>
+
+<!-- RUTA -->
+<section id="ruta">
+  <div class="wrap">
+    <div class="eyebrow rv">La ruta</div>
+    <h2 class="h2 rv">Doce noches, cinco ciudades</h2>
+    <p class="lead rv">Los tramos dentro de Europa son iguales para todas las opciones. Lo que cambia es cómo llegamos y cómo volvemos.</p>
+    <div class="map-grid">
+      <div class="map-card rv">
+        <svg id="map" viewBox="0 0 600 520" role="img" aria-label="Mapa de la ruta Barcelona, Ibiza, Roma, Ámsterdam, París"></svg>
+      </div>
+      <div class="stops" id="stops"></div>
+    </div>
+    <div class="days rv" id="days" aria-label="Calendario día por día"></div>
+  </div>
+</section>
+
+<!-- TIEMPO LIBRE -->
+<section id="tiempo" style="padding-top:20px">
+  <div class="wrap">
+    <div class="eyebrow rv">Tiempo libre</div>
+    <h2 class="h2 rv">Horas para pasear, visitar y comprar</h2>
+    <p class="lead rv">Horas despiertos en cada ciudad, desde que dejamos las valijas en el alojamiento hasta que salimos para el próximo vuelo o tren. Cambia según la opción de vuelo, sobre todo en Barcelona y París.</p>
+    <div class="free-head">
+      <div class="free-total num"><span id="free-tot">0</span> h<small id="free-sub"></small></div>
+      <div><div class="ctl-label" style="margin-bottom:6px">Opción de vuelo</div><div class="mini-opts" id="mini-opts" role="group" aria-label="Opción de vuelo"></div></div>
+    </div>
+    <div class="free" id="free"></div>
+    <p class="free-note">Cómo lo calculé: cuento de 9:00 a 24:00 (las salidas de noche van aparte). Desde que aterrizamos hasta estar en el alojamiento, 1 h 30 (valijas + traslado). Para un vuelo salimos del alojamiento 2 h 30 antes; para Beauvais (Ryanair), 4 h antes. El horario del Eurostar Ámsterdam → París todavía no está en la planilla: supuse que salimos a las 9:30 y llegamos al depto de París a las 14:30.</p>
+  </div>
+</section>
+
+<!-- VUELOS -->
+<section id="vuelos" style="padding-top:20px">
+  <div class="wrap">
+    <div class="eyebrow rv">Vuelos</div>
+    <h2 class="h2 rv">Cinco formas de ir y volver</h2>
+    <p class="lead rv">Precios en USD por persona, buscados para 7 pasajeros. Elegí una opción y si viajan con valija despachada; todo lo de abajo se recalcula.</p>
+
+    <div class="controls" role="group" aria-label="Opciones de cálculo">
+      <span class="ctl-label">Equipaje</span>
+      <div class="seg" id="seg-bag">
+        <button type="button" data-bag="0" aria-pressed="true">Solo carry-on</button>
+        <button type="button" data-bag="1" aria-pressed="false">Con valija</button>
+      </div>
+      <span class="ctl-label">Personas</span>
+      <div class="seg" id="seg-pax">
+        <button type="button" data-pax="7" aria-pressed="true">7</button>
+        <button type="button" data-pax="8" aria-pressed="false">8</button>
+      </div>
+    </div>
+
+    <div class="opt-tabs" id="opt-tabs" role="group" aria-label="Opción de vuelo"></div>
+
+    <div class="detail">
+      <div class="panel" id="itin"></div>
+      <div class="panel">
+        <h3>Costo del vuelo</h3>
+        <div class="sub" id="bd-sub"></div>
+        <div class="breakdown" id="breakdown"></div>
+        <div class="chart">
+          <div class="legend"><span><i style="background:var(--ink)"></i>Ida</span><span><i style="background:var(--accent)"></i>Vuelta (desde París)</span></div>
+          <div id="dur-chart"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VEREDICTO -->
+<section id="conviene" style="padding-top:10px">
+  <div class="wrap">
+    <div class="eyebrow rv">La que más vale la pena</div>
+    <h2 class="h2 rv">¿Cuál conviene comprar?</h2>
+    <p class="lead rv">Comparo lo que cuesta cada opción contra lo que te da: horas libres en Europa, horas metidos en aviones y aeropuertos, escalas y riesgo. Los números siguen los selectores de valija y personas.</p>
+    <div class="swrow"><button type="button" class="sw light" role="switch" aria-checked="false" data-sw id="sw-conviene"><span class="lbl lbl-off">Sin valija</span><span class="swt"><span class="knob">🧳</span></span><span class="lbl lbl-on">Con valija</span></button><button type="button" class="sw" role="switch" aria-checked="false" data-swpax id="swp-budget" aria-label="8 personas"><span class="lbl lbl-off">7 personas</span><span class="swt"><span class="knob num">7</span></span><span class="lbl lbl-on">8 personas</span></button><span class="hint">Cambia todos los precios de la página</span></div>
+    <div class="verdict">
+      <div class="vcard rv" id="vcard"></div>
+      <div class="panel rv" style="padding:16px 18px">
+        <h3 style="font-size:20px">Las 5 lado a lado</h3>
+        <div class="sub">Verde = la mejor en esa columna · rojo = la peor</div>
+        <div class="tbl"><table class="vtable" id="vtable"></table></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRESUPUESTO -->
+<section class="budget" id="presupuesto">
+  <div class="wrap">
+    <div class="eyebrow">Presupuesto por persona</div>
+    <h2 class="h2">Lo que sale el viaje entero</h2>
+    <p class="lead">Vuelo largo + tramos dentro de Europa + alojamiento. No incluye comida, salidas ni traslados al aeropuerto.</p>
+    <div class="swrow"><button type="button" class="sw" role="switch" aria-checked="false" data-sw id="sw-budget"><span class="lbl lbl-off">Sin valija</span><span class="swt"><span class="knob">🧳</span></span><span class="lbl lbl-on">Con valija</span></button><button type="button" class="sw light" role="switch" aria-checked="false" data-swpax id="swp-conviene" aria-label="8 personas"><span class="lbl lbl-off">7 personas</span><span class="swt"><span class="knob num">7</span></span><span class="lbl lbl-on">8 personas</span></button><span class="hint">Cambia todos los precios de la página</span></div>
+    <div class="big-total">
+      <div class="v num"><sup>USD</sup><span id="tot">0</span></div>
+      <div class="ctx" id="tot-ctx"></div>
+    </div>
+    <div class="stack" id="stack"></div>
+    <div class="stack-key" id="stack-key"></div>
+    <div class="cmp" id="cmp"></div>
+  </div>
+</section>
+
+<!-- ALOJAMIENTO -->
+<section id="alojamiento">
+  <div class="wrap">
+    <div class="eyebrow rv">Alojamiento</div>
+    <h2 class="h2 rv">Dónde dormimos</h2>
+    <p class="lead rv">Precio por persona por toda la estadía en cada ciudad. Con 8 personas cambia el depto de Roma.</p>
+    <div class="lodges" id="lodges"></div>
+  </div>
+</section>
+
+<!-- INFO -->
+<section id="info" style="padding-top:20px">
+  <div class="wrap">
+    <div class="eyebrow rv">Datos útiles</div>
+    <h2 class="h2 rv">Tramos, traslados y cancelaciones</h2>
+    <div class="info-grid">
+      <div class="panel rv">
+        <h3>Tramos dentro de Europa</h3>
+        <div class="tbl"><table class="legs-table">
+          <thead><tr><th>Día</th><th>Tramo</th><th class="r">Carry-on</th><th class="r">Valija</th></tr></thead>
+          <tbody id="legs"></tbody>
+          <tfoot><tr><td></td><td><b>Subtotal</b></td><td class="r"><b>USD 207</b></td><td class="r"><b>USD 396</b></td></tr></tfoot>
+        </table></div>
+      </div>
+      <div class="panel rv">
+        <h3>Aeropuerto de Barcelona → depto</h3>
+        <div class="sub">El depto está en Plaça Catalunya</div>
+        <div class="tbl"><table>
+          <thead><tr><th>Cómo</th><th>Precio</th><th>Dato</th></tr></thead>
+          <tbody>
+            <tr><td><b>Taxi</b> <span class="pill good">con valijas</span></td><td>€28–40 por auto<br><small>≈ €60–90 en 2 autos</small></td><td>Puerta a puerta</td></tr>
+            <tr><td><b>Aerobús A1/A2</b> <span class="pill good">más barato cómodo</span></td><td>€7,75</td><td>30–35 min, bajás en Plaça Catalunya</td></tr>
+            <tr><td><b>Metro L9 Sud</b></td><td>€5,90</td><td>Con combinaciones</td></tr>
+            <tr><td><b>Tren R2</b></td><td>€5,50</td><td>Solo desde la T2</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+      <div class="panel rv">
+        <h3>Cancelación de vuelos</h3>
+        <div class="sub">Conviene comprar el vuelo largo directo en LATAM o Iberia</div>
+        <div class="tbl"><table>
+          <thead><tr><th>Aerolínea</th><th>Se puede cancelar</th></tr></thead>
+          <tbody>
+            <tr><td>LATAM</td><td><span class="pill good">24 h gratis</span></td></tr>
+            <tr><td>Iberia</td><td><span class="pill good">24 h gratis</span></td></tr>
+            <tr><td>Air France</td><td><span class="pill warn">sin confirmar</span></td></tr>
+            <tr><td>Wizz Air</td><td><span class="pill warn">solo con cargo</span></td></tr>
+            <tr><td>Vueling</td><td><span class="pill bad">no</span></td></tr>
+            <tr><td>Ryanair</td><td><span class="pill bad">no</span></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+      <div class="panel rv">
+        <h3>Ibiza: alternativas</h3>
+        <div class="sub">Total para el grupo, 2 noches (USD)</div>
+        <div class="ibz-bars" id="ibz"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">Datos tomados de la planilla “Viaje Europa agosto 2027 – Presupuesto y links”. Precios buscados en noviembre 2026; pueden cambiar. El precio con valija de la opción D se buscó para 1 pasajero.</div>
+</footer>
+
+<script>
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ======== DATOS (de la planilla) ======== */
+const CITIES = [
+  {id:'bcn', name:'Barcelona', color:'var(--bcn)', hex:'#e8553d', lat:41.387, lon:2.169, from:8, to:10, nights:2},
+  {id:'ibz', name:'Ibiza', color:'var(--ibz)', hex:'#16a097', lat:38.891, lon:1.407, from:10, to:12, nights:2},
+  {id:'rom', name:'Roma', color:'var(--rom)', hex:'#c38a17', lat:41.895, lon:12.50, from:12, to:15, nights:3},
+  {id:'ams', name:'Ámsterdam', color:'var(--ams)', hex:'#3a6fe0', lat:52.37, lon:4.90, from:15, to:18, nights:3},
+  {id:'par', name:'París', color:'var(--par)', hex:'#8a4fd0', lat:48.863, lon:2.335, from:18, to:20, nights:2},
+];
+const LEGS = [
+  {day:'Mar 10/08', from:'Barcelona', to:'Ibiza', how:'Vueling 18:15 → 19:20', mode:'✈', carry:25, bag:84},
+  {day:'Jue 12/08', from:'Ibiza', to:'Roma (FCO)', how:'Wizz Air 08:25 → 10:20', mode:'✈', carry:34, bag:74},
+  {day:'Dom 15/08', from:'Roma', to:'Ámsterdam', how:'ITA 08:30 → 11:00', mode:'✈', carry:109, bag:199, note:'con valija: Economy Flex'},
+  {day:'Mié 18/08', from:'Ámsterdam', to:'París Nord', how:'Eurostar (tren)', mode:'🚆', carry:39, bag:39},
+];
+const EU = {carry:207, bag:396};
+const LODGE = {7:841, 8:882};
+
+const OPTS = {
+  A:{name:'Air France + Ryanair', short:'Actual', color:'#8a8f9e',
+     carry:{long:970, par:79, night:55, total:1104}, bag:{long:1087, par:61, night:55, total:1203},
+     idaDur:'17h 25m', idaMin:1045, vtaDur:'38h 25m', vtaMin:2305,
+     ida:{date:'Sáb 07/08', carrier:'Air France', nodes:[['EZE','00:20 sáb 07'],['CDG','',"escala 2h40"],['BCN','22:45 sáb 07']]},
+     par:{carrier:'Ryanair', nodes:[['BVA','12:35 vie 20'],['BCN','14:20']], note:'Sale de Beauvais, a ~1h15 de París'},
+     vta:{date:'Vie 20/08', carrier:'Air France', nodes:[['BCN','21:15 vie 20'],['CDG','',"escala 14h05"],['EZE','22:00 sáb 21']]},
+     comment:'La que estaba en la planilla. La vuelta tiene una escala de 14 horas en París.'},
+  B:{name:'LATAM + Vueling', short:'La más segura', color:'#1f8a5b',
+     carry:{long:1013, par:118, night:0, total:1131}, bag:{long:1193, par:146, night:0, total:1339},
+     idaDur:'16h 55m', idaMin:1015, vtaDur:'29h 10m', vtaMin:1750,
+     ida:{date:'Sáb 07/08', carrier:'LATAM', nodes:[['AEP','18:20 sáb 07'],['GRU','',"escala 1h10"],['MAD','',"escala 1h40"],['BCN','16:15 dom 08']]},
+     par:{carrier:'Vueling', nodes:[['ORY','09:30 vie 20'],['BCN','11:10']], note:'Sale de Orly, más cerca del centro'},
+     vta:{date:'Vie 20/08', carrier:'LATAM', nodes:[['BCN','18:15 vie 20'],['MAD','',"escala 4h05"],['GRU','',"escala 1h25"],['AEP','09:40 sáb 21']]},
+     comment:'La alternativa segura: aerolíneas confiables, sale y llega a Aeroparque, y LATAM deja cancelar gratis en 24 h. Es la que menos horas libres deja.'},
+  C:{name:'LEVEL + Vueling', short:'Directo', color:'#d29a12',
+     carry:{long:1252, par:118, night:55, total:1425}, bag:{long:1431, par:127, night:55, total:1613},
+     idaDur:'12h 35m', idaMin:755, vtaDur:'27h 25m', vtaMin:1645,
+     ida:{date:'Sáb 07/08', carrier:'LEVEL', nodes:[['EZE','18:05 sáb 07'],['BCN','11:40 dom 08']]},
+     par:{carrier:'Vueling', nodes:[['ORY','17:55 vie 20'],['BCN','19:35']], note:'Se duerme una noche más en Barcelona'},
+     vta:{date:'Sáb 21/08', carrier:'LEVEL', nodes:[['BCN','07:55 sáb 21'],['EZE','16:20 sáb 21']]},
+     comment:'Directo de ida y de vuelta. Hay que sumar una noche extra en Barcelona.'},
+  D:{name:'LEVEL + British Airways', short:'Ida directa, vuelve desde París', color:'#8a4fd0', rec:true,
+     carry:{long:1400, par:0, night:0, total:1400}, bag:{long:1459, par:0, night:0, total:1459},
+     idaDur:'12h 35m', idaMin:755, vtaDur:'19h 05m', vtaMin:1145,
+     ida:{date:'Sáb 07/08', carrier:'LEVEL', nodes:[['EZE','18:05 sáb 07'],['BCN','11:40 dom 08']]},
+     par:null,
+     vta:{date:'Vie 20/08', carrier:'British Airways', nodes:[['CDG','20:25 vie 20'],['LHR','',"escala 1h40"],['GRU','',"escala 1h35"],['AEP','10:30 sáb 21']]},
+     comment:'La que más vale la pena: ida directa y vuelta desde París, sin volver a Barcelona. Precio de Turismocity/GotoGate pagando en dólares.'},
+  E:{name:'Avianca', short:'Vuelve desde París a la mañana', color:'#e0782e',
+     carry:{long:1358, par:0, night:0, total:1358}, bag:{long:1358, par:0, night:0, total:1358},
+     idaDur:'20h 35m', idaMin:1235, vtaDur:'20h 30m', vtaMin:1230,
+     ida:{date:'Sáb 07/08', carrier:'Avianca', nodes:[['EZE','07:10 sáb 07'],['BOG','',"escala 4h05"],['BCN','08:45 dom 08']]},
+     par:null,
+     vta:{date:'Vie 20/08', carrier:'Avianca', nodes:[['CDG','08:55 vie 20'],['BOG','',"escala 2h55"],['EZE','00:25 sáb 21']]},
+     comment:'La tarifa ya incluye valija. Ojo: el último día en París se pierde porque el vuelo sale a la mañana.'},
+};
+
+const LODGES = [
+  {city:CITIES[0], dates:'08 → 10 ago · 2 noches', name:'Best location in BCN · Plaza Catalunya', via:'Airbnb', addr:'Eixample, al lado de Plaça Catalunya', p7:142, p8:124,
+   status:['good','Reservado'], cancel:'Cancelación gratis hasta el 25/07', url:'https://www.airbnb.com.ar/rooms/10170589', map:[41.38691,2.16872]},
+  {city:CITIES[1], dates:'10 → 12 ago · 2 noches', name:'Ibiza Sun Apartments', via:'Booking', addr:"Deessa Tanit 3, Playa d'en Bossa", p7:299, p8:298,
+   status:['warn','Falta reservar'], cancel:'No reembolsable', url:'https://www.booking.com/hotel/es/ibiza-sun-apartments.es.html', map:[38.8913731,1.4067154]},
+  {city:CITIES[2], dates:'12 → 15 ago · 3 noches', name:'RomeyourHome @Termini', via:'Airbnb', addr:'Via Nino Bixio 41, Esquilino · 4º piso sin ascensor', p7:109, p8:210,
+   status:['good','Reservado (7)'], cancel:'Si somos 8: Gran Madonna dei Monti (Monti)', url:'https://www.airbnb.com.ar/rooms/23241909', url8:'https://www.airbnb.com.ar/rooms/40834948', map:[41.895,12.5095], map8:[41.89543,12.4901]},
+  {city:CITIES[3], dates:'15 → 18 ago · 3 noches', name:'A definir · referencia: Via Amsterdam', via:'Booking', addr:'20 Diemerhof, 1112 XN', p7:126, p8:105,
+   status:['bad','Sin elegir'], cancel:'Precio de referencia', url:'https://www.booking.com/hotel/nl/via-amsterdam.es.html', map:[52.326207,4.953709]},
+  {city:CITIES[4], dates:'18 → 20 ago · 2 noches', name:'Depto para 8 cerca del Louvre', via:'Airbnb', addr:'1er arrondissement', p7:166, p8:145,
+   status:['warn','Cancelación 24 h'], cancel:'Solo 24 h de cancelación gratis', url:'https://www.airbnb.com.ar/rooms/615069', map:[48.8629,2.3347]},
+];
+
+const IBZ = [
+  ['Hostal Ripoll',1556],['Ibiza Sun Apartments',2110,true],['Arlanza',2245],['Bon Sol',2311],['Heaven',2843]
+];
+
+/* Tiempo libre: [día de agosto, hora decimal] llegada al alojamiento y salida */
+const FREE_COMMON = {
+  ibz:[[10,20.5],[12,6.5],'Llegamos 20:30 mar 10','Salimos 06:30 jue 12 (Wizz 08:25)'],
+  rom:[[12,12],[15,6],'Llegamos 12:00 jue 12','Salimos 06:00 dom 15 (ITA 08:30)'],
+  ams:[[15,12.5],[18,9.5],'Llegamos 12:30 dom 15','Salimos 09:30 mié 18 (Eurostar)'],
+};
+const FREE_OPT = {
+  A:{bcn:[[8,0.25],'Llegamos 00:15 dom 08 (aterriza 22:45 sáb)'], parEnd:[[20,8.5],'Salimos 08:30 vie 20 (Ryanair desde Beauvais)'], back:[[20,15.25],[20,18.5],'Paseo 15:15–18:30 vie 20 antes del Air France 21:15']},
+  B:{bcn:[[8,17.75],'Llegamos 17:45 dom 08 (aterriza 16:15)'], parEnd:[[20,7],'Salimos 07:00 vie 20 (Vueling desde Orly)'], back:[[20,12],[20,15.5],'Paseo 12:00–15:30 vie 20 antes del LATAM 18:15']},
+  C:{bcn:[[8,13.17],'Llegamos 13:10 dom 08 (aterriza 11:40)'], parEnd:[[20,15.5],'Salimos 15:30 vie 20 (Vueling 17:55)'], back:[[20,20.5],[21,5.5],'Noche extra: 20:30 vie 20 hasta el LEVEL 07:55 sáb']},
+  D:{bcn:[[8,13.17],'Llegamos 13:10 dom 08 (aterriza 11:40)'], parEnd:[[20,17.5],'Salimos 17:30 vie 20 (BA desde CDG 20:25)'], back:null},
+  E:{bcn:[[8,10.25],'Llegamos 10:15 dom 08 (aterriza 08:45)'], parEnd:[[20,6],'Salimos 06:00 vie 20 (Avianca 08:55)'], back:null},
+};
+const DOW=['dom','lun','mar','mié','jue','vie','sáb'];
+function awake(a,b){ // horas entre 9 y 24 de cada día
+  const out=[];
+  for(let d=a[0]; d<=b[0]; d++){
+    const s=Math.max(9, d===a[0]?a[1]:0), e=Math.min(24, d===b[0]?b[1]:24);
+    out.push([d, Math.max(0,e-s)]);
+  }
+  return out;
+}
+function freeFor(k){
+  const f=FREE_OPT[k], rows=[];
+  rows.push({c:CITIES[0], span:awake(f.bcn[0],[10,15.5]), when:[f.bcn[1],'Salimos 15:30 mar 10 (Vueling 18:15)']});
+  rows.push({c:CITIES[1], span:awake(...FREE_COMMON.ibz.slice(0,2)), when:FREE_COMMON.ibz.slice(2)});
+  rows.push({c:CITIES[2], span:awake(...FREE_COMMON.rom.slice(0,2)), when:FREE_COMMON.rom.slice(2)});
+  rows.push({c:CITIES[3], span:awake(...FREE_COMMON.ams.slice(0,2)), when:FREE_COMMON.ams.slice(2)});
+  rows.push({c:CITIES[4], span:awake([18,14.5],f.parEnd[0]), when:['Llegamos 14:30 mié 18',f.parEnd[1]]});
+  if(f.back) rows.push({c:{name:'Barcelona (vuelta)',color:'var(--bcn)',id:'bcn2'}, extra:true, span:awake(f.back[0],f.back[1]), when:[f.back[2]]});
+  rows.forEach(r=>r.h=r.span.reduce((s,x)=>s+x[1],0));
+  return rows;
+}
+const freeTotal = k => freeFor(k).reduce((s,r)=>s+r.h,0);
+function fmtH(h){ const q=Math.round(h*4)/4, H=Math.floor(q), M=Math.round((q-H)*60); return M? `${H} h ${M}`:`${H} h`; }
+
+const TRAVEL = {A:3350,B:2765,C:2400,D:1900,E:2465}; // minutos ida + vuelta desde París
+const STOPS = {A:3,B:5,C:1,D:2,E:2}; // escalas + vuelos extra a BCN
+const FLOJO = {
+  A:'Ryanair desde Beauvais y 14 h de escala en París',
+  B:'Menos horas en Barcelona y 2 escalas por tramo',
+  C:'La más cara y suma una noche en Barcelona',
+  D:'Se compra por agencia (GotoGate)',
+  E:'Perdés el último día en París y 4 h de escala en Bogotá',
+};
+const state = {opt:'D', bag:true, pax:7};
+
+/* ======== utilidades ======== */
+const $ = s => document.querySelector(s);
+const fmt = n => Math.round(n).toLocaleString('es-AR');
+function countTo(el, to){
+  const from = parseFloat(el.dataset.v || 0); el.dataset.v = to;
+  if (REDUCED){ el.textContent = fmt(to); return; }
+  const t0 = performance.now(), d = 900;
+  (function step(t){
+    const k = Math.min(1,(t-t0)/d), e = 1-Math.pow(1-k,3);
+    el.textContent = fmt(from + (to-from)*e);
+    if (k<1) requestAnimationFrame(step);
+  })(t0);
+}
+const mode = () => state.bag ? 'bag' : 'carry';
+function tripTotal(k){ return OPTS[k][mode()].total + EU[mode()] + LODGE[state.pax]; }
+
+/* ======== HERO: cielo animado ======== */
+(function sky(){
+  const c = $('#sky'), x = c.getContext('2d');
+  let W,H,stars=[],t=0;
+  function size(){
+    const r = devicePixelRatio||1; W=c.offsetWidth; H=c.offsetHeight;
+    c.width=W*r; c.height=H*r; x.setTransform(r,0,0,r,0,0);
+    stars = Array.from({length:Math.round(W*H/5000)},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.3+.2,p:Math.random()*6}));
+  }
+  function arc(k){ // curva BUE (abajo izq) → Europa (arriba der)
+    const p0={x:W*.6,y:H*.9}, p1={x:W*.55,y:-H*.15}, p2={x:W*.95,y:H*.32};
+    const u=1-k; return {x:u*u*p0.x+2*u*k*p1.x+k*k*p2.x, y:u*u*p0.y+2*u*k*p1.y+k*k*p2.y};
+  }
+  function frame(){
+    t+=1/60; x.clearRect(0,0,W,H);
+    for(const s of stars){ x.globalAlpha=.25+.35*Math.sin(t*1.5+s.p)**2; x.fillStyle='#fff'; x.beginPath(); x.arc(s.x,s.y,s.r,0,7); x.fill(); }
+    x.globalAlpha=1;
+    // ruta punteada que fluye
+    x.setLineDash([2,9]); x.lineDashOffset=-t*30; x.strokeStyle='rgba(243,182,59,.55)'; x.lineWidth=2;
+    x.beginPath(); for(let i=0;i<=80;i++){const p=arc(i/80); i?x.lineTo(p.x,p.y):x.moveTo(p.x,p.y);} x.stroke(); x.setLineDash([]);
+    // aviones
+    for(let j=0;j<2;j++){
+      const k=((t*.06)+j*.5)%1, p=arc(k), q=arc(Math.min(1,k+.005)), a=Math.atan2(q.y-p.y,q.x-p.x);
+      // estela
+      const g=x.createLinearGradient(arc(Math.max(0,k-.12)).x,arc(Math.max(0,k-.12)).y,p.x,p.y);
+      g.addColorStop(0,'rgba(238,90,54,0)'); g.addColorStop(1,'rgba(238,90,54,.9)');
+      x.strokeStyle=g; x.lineWidth=3; x.beginPath();
+      for(let i=0;i<=20;i++){const pp=arc(Math.max(0,k-.12+.12*i/20)); i?x.lineTo(pp.x,pp.y):x.moveTo(pp.x,pp.y);} x.stroke();
+      x.save(); x.translate(p.x,p.y); x.rotate(a); x.fillStyle='#fff';
+      x.beginPath(); x.moveTo(9,0); x.lineTo(-6,-6); x.lineTo(-3,0); x.lineTo(-6,6); x.closePath(); x.fill(); x.restore();
+    }
+    // puntos origen/destino
+    [[arc(0),'BUE'],[arc(1),'BCN']].forEach(([p,l])=>{
+      x.fillStyle='#f3b63b'; x.beginPath(); x.arc(p.x,p.y,4,0,7); x.fill();
+      x.strokeStyle='rgba(243,182,59,'+(.6-((t%2)/2)*.6)+')'; x.lineWidth=2; x.beginPath(); x.arc(p.x,p.y,4+(t%2)*10,0,7); x.stroke();
+      x.fillStyle='rgba(255,255,255,.7)'; x.font='600 11px ui-monospace,monospace'; x.fillText(l,p.x+8,p.y-8);
+    });
+    if(!REDUCED) requestAnimationFrame(frame);
+  }
+  size(); addEventListener('resize',size); frame();
+})();
+
+/* ======== cuenta regresiva ======== */
+(function cd(){
+  const target = new Date('2027-08-07T00:00:00-03:00').getTime();
+  function tick(){
+    let s = Math.max(0, Math.floor((target-Date.now())/1000));
+    const d=Math.floor(s/86400); s-=d*86400; const h=Math.floor(s/3600); s-=h*3600; const m=Math.floor(s/60); s-=m*60;
+    $('#cd-d').textContent=d; $('#cd-h').textContent=String(h).padStart(2,'0');
+    $('#cd-m').textContent=String(m).padStart(2,'0'); $('#cd-s').textContent=String(s).padStart(2,'0');
+  }
+  tick(); setInterval(tick,1000);
+})();
+
+/* ======== MAPA ======== */
+const proj = (lat,lon) => ({x:40+(lon+4)/20*520, y:40+(55-lat)/19*440});
+function drawMap(){
+  const svg = $('#map'); const NS='http://www.w3.org/2000/svg';
+  const el=(n,a,p=svg)=>{const e=document.createElementNS(NS,n); for(const k in a) e.setAttribute(k,a[k]); p.appendChild(e); return e;};
+  svg.innerHTML='';
+  for(let lon=0;lon<=15;lon+=5){const p=proj(55,lon),q=proj(36,lon); el('line',{x1:p.x,y1:p.y,x2:q.x,y2:q.y,class:'grat'}); el('text',{x:p.x+4,y:52,class:'grat-lbl'}).textContent=lon+'°E';}
+  for(let lat=40;lat<=55;lat+=5){const p=proj(lat,-4),q=proj(lat,16); el('line',{x1:p.x,y1:p.y,x2:q.x,y2:q.y,class:'grat'}); el('text',{x:44,y:p.y-4,class:'grat-lbl'}).textContent=lat+'°N';}
+  const pts = CITIES.map(c=>proj(c.lat,c.lon));
+  const legLbl = ['Vueling','Wizz Air','ITA','Eurostar'];
+  const paths=[];
+  for(let i=0;i<pts.length-1;i++){
+    const a=pts[i], b=pts[i+1], mx=(a.x+b.x)/2, my=(a.y+b.y)/2, dx=b.x-a.x, dy=b.y-a.y;
+    const bend = i===3 ? .12 : .28;
+    const cx=mx - dy*bend, cy=my + dx*bend;
+    const d=`M${a.x},${a.y} Q${cx},${cy} ${b.x},${b.y}`;
+    const p=el('path',{d,class:'leg',stroke:CITIES[i+1].hex, 'stroke-dasharray': i===3?'4 6':'none'});
+    paths.push(p);
+    const lx=.25*a.x+.5*cx+.25*b.x, ly=.25*a.y+.5*cy+.25*b.y;
+    el('text',{x:lx+6,y:ly,class:'leg-lbl'}).textContent=legLbl[i];
+  }
+  // regreso a BCN (según opción)
+  const back = OPTS[state.opt].par;
+  const a=pts[4], b=pts[0];
+  const ret = el('path',{d:`M${a.x},${a.y} Q${a.x-70},${(a.y+b.y)/2} ${b.x},${b.y}`,class:'leg',stroke:'rgba(255,255,255,.45)','stroke-dasharray':'2 6',opacity: back?1:0});
+  if(back){ el('text',{x:a.x-78,y:(a.y+b.y)/2+30,class:'leg-lbl',fill:'#fff'}).textContent=back.carrier+' a BCN'; }
+  else { el('text',{x:a.x-150,y:a.y+38,class:'leg-lbl'}).textContent='Vuelta a BA desde París'; }
+  pts.forEach((p,i)=>{
+    const c=CITIES[i];
+    el('circle',{cx:p.x,cy:p.y,r:7,fill:c.hex,class:'pulse'});
+    el('circle',{cx:p.x,cy:p.y,r:7,fill:c.hex,stroke:'#121a3a','stroke-width':3});
+    const right = i===2 ? -1 : 1;
+    const tx = el('text',{x:p.x+14*right,y:p.y-4,class:'city-lbl','text-anchor':right<0?'end':'start'}); tx.textContent=c.name;
+    const sub= el('text',{x:p.x+14*right,y:p.y+12,class:'city-sub','text-anchor':right<0?'end':'start'}); sub.textContent=`${String(c.from).padStart(2,'0')}–${c.to}/08 · ${c.nights} noches`;
+  });
+  // avión que recorre la ruta
+  const plane = el('g',{});
+  el('path',{d:'M9 0 L-6 -6 L-3 0 L-6 6 Z',fill:'#fff'},plane);
+  const lens = paths.map(p=>p.getTotalLength()), total=lens.reduce((s,v)=>s+v,0);
+  let t0=performance.now(); const gen=(drawMap._gen=(drawMap._gen||0)+1);
+  function anim(t){
+    if(gen!==drawMap._gen) return;
+    let dist=((t-t0)/1000*70)%total, i=0;
+    while(dist>lens[i]){dist-=lens[i]; i++;}
+    const p=paths[i].getPointAtLength(dist), q=paths[i].getPointAtLength(Math.min(lens[i],dist+1));
+    plane.setAttribute('transform',`translate(${p.x},${p.y}) rotate(${Math.atan2(q.y-p.y,q.x-p.x)*180/Math.PI})`);
+    if(!REDUCED) requestAnimationFrame(anim);
+  }
+  if(REDUCED){ const p=paths[0].getPointAtLength(lens[0]/2); plane.setAttribute('transform',`translate(${p.x},${p.y})`);} else requestAnimationFrame(anim);
+  svg._paths = paths.concat(back?[ret]:[]);
+}
+function playMapDraw(){
+  if(REDUCED) return;
+  ($('#map')._paths||[]).forEach((p,i)=>{
+    const L=p.getTotalLength(); const dash=p.getAttribute('stroke-dasharray');
+    if(dash!=='none') return;
+    p.style.setProperty('--len',L); p.style.strokeDasharray=L; p.style.animationDelay=(i*.35)+'s';
+    p.classList.remove('draw'); void p.offsetWidth; p.classList.add('draw');
+  });
+}
+
+function drawStops(){
+  const box=$('#stops'); box.innerHTML='';
+  CITIES.forEach((c,i)=>{
+    const L=LODGES[i];
+    box.insertAdjacentHTML('beforeend',`
+      <div class="stop rv"><div class="bar" style="background:${c.color}"></div>
+        <div><h3>${c.name}</h3><p>${String(c.from).padStart(2,'0')} → ${c.to} de agosto · ${L.name}</p><span class="free-h" id="fh-${c.id}"></span></div>
+        <div class="n">${c.nights}<small>noches</small></div></div>`);
+    if(LEGS[i]) box.insertAdjacentHTML('beforeend',`<div class="transit">${LEGS[i].mode} ${LEGS[i].day} · ${LEGS[i].how}</div>`);
+  });
+  const d=$('#days'); d.innerHTML='';
+  const dn=['dom','lun','mar','mié','jue','vie','sáb'];
+  for(let day=8; day<=20; day++){
+    const c=CITIES.find(c=>day>=c.from && day<c.to) || CITIES[4];
+    const wd=dn[new Date(2027,7,day).getDay()];
+    d.insertAdjacentHTML('beforeend',`<div class="day" style="background:${c.color}" title="${c.name}">${day}<small>${wd}</small></div>`);
+  }
+}
+
+/* ======== OPCIONES DE VUELO ======== */
+function drawTabs(){
+  const box=$('#opt-tabs'); box.innerHTML='';
+  for(const k in OPTS){
+    const o=OPTS[k];
+    box.insertAdjacentHTML('beforeend',`
+      <button type="button" class="opt" data-k="${k}" aria-pressed="${state.opt===k}">
+        ${o.rec?'<span class="tag">Vale la pena</span>':''}
+        <span class="letter" style="background:${o.color}">${k}</span>
+        <span class="nm">${o.name}</span>
+        <span class="carrier">${o.short}</span>
+        <span class="pr num">USD ${fmt(o[mode()].total)} <small>vuelos</small></span>
+        <span class="fh num">${fmtH(freeTotal(k))} libres en Europa</span>
+      </button>`);
+  }
+  box.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{state.opt=b.dataset.k; update();});
+}
+function track(leg, isTrain){
+  let h='<div class="track">';
+  leg.nodes.forEach((n,i)=>{
+    if(i>0) h+=`<div class="seg-line${isTrain?' train':''}"><span class="pl" style="animation-delay:${i*.4}s">✈</span></div>`;
+    const mid = !!n[2];
+    h+=`<div class="node${mid?' mid':''}"><span class="dot"></span><span class="code">${n[0]}</span>${n[1]?`<span class="t">${n[1]}</span>`:''}${mid?`<span class="lay">${n[2]}</span>`:''}</div>`;
+  });
+  return h+'</div>';
+}
+function drawItin(){
+  const o=OPTS[state.opt];
+  const stopsIda=o.ida.nodes.length-2, stopsVta=o.vta.nodes.length-2;
+  const esc = n => n===0?'directo':n===1?'1 escala':n+' escalas';
+  $('#itin').innerHTML=`
+    <h3>Opción ${state.opt} · ${o.name}</h3>
+    <div class="sub">${o.comment}</div>
+    <div class="trip">
+      <div class="trip-h"><b>Ida · ${o.ida.date}</b><span>${o.ida.carrier} · ${esc(stopsIda)} · <span class="dur">${o.idaDur}</span></span></div>
+      ${track(o.ida)}
+    </div>
+    ${o.par?`<div class="trip">
+      <div class="trip-h"><b>París → Barcelona · vie 20/08</b><span>${o.par.carrier}</span></div>
+      ${track(o.par)}
+      <div class="carrier">${o.par.note}</div>
+    </div>`:''}
+    <div class="trip">
+      <div class="trip-h"><b>Vuelta · ${o.vta.date}</b><span>${o.vta.carrier} · ${esc(stopsVta)} · <span class="dur">${o.vtaDur}</span> desde París</span></div>
+      ${track(o.vta)}
+    </div>
+    <div class="note">La duración de la vuelta se cuenta desde que salimos de París hasta que llegamos a Buenos Aires, con esperas incluidas.</div>`;
+}
+function drawBreakdown(){
+  const o=OPTS[state.opt], m=o[mode()];
+  $('#bd-sub').textContent = (state.bag?'Con valija despachada':'Solo carry-on') + ' · USD por persona';
+  const rows=[['Vuelo largo ida y vuelta',m.long]];
+  if(o.par) rows.push([`París → Barcelona (${o.par.carrier})`,m.par]);
+  if(m.night) rows.push(['Noche extra',m.night]);
+  $('#breakdown').innerHTML = rows.map(r=>`<div class="brow"><span>${r[0]}</span><span>USD ${fmt(r[1])}</span></div>`).join('')
+    + `<div class="btotal"><span>Total vuelos</span><b class="num" id="bt-v">0</b></div>`
+    + (state.opt==='E'&&state.bag?'<span class="pill good">La tarifa ya incluye valija</span>':'')
+    + (state.opt==='D'&&state.bag?'<span class="pill warn">Precio buscado para 1 pasajero</span>':'');
+  const v=$('#bt-v'); v.dataset.v = drawBreakdown._last||0; countTo(v,m.total); drawBreakdown._last=m.total;
+}
+function drawDur(){
+  const max=2305, box=$('#dur-chart');
+  if(!box.children.length){
+    for(const k in OPTS){
+      box.insertAdjacentHTML('beforeend',`<div class="crow" data-k="${k}" role="button" tabindex="0" aria-label="Elegir opción ${k}">
+        <span class="lt" style="background:${OPTS[k].color}">${k}</span>
+        <div class="bars"><div class="bt"><i style="width:0;background:var(--ink)"></i><em>${OPTS[k].idaDur}</em></div>
+        <div class="bt"><i style="width:0;background:var(--accent)"></i><em>${OPTS[k].vtaDur}</em></div></div></div>`);
+    }
+    box.querySelectorAll('.crow').forEach(r=>{ r.onclick=()=>{state.opt=r.dataset.k;update();}; r.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();r.click();}}; });
+  }
+  box.querySelectorAll('.crow').forEach(r=>{
+    const o=OPTS[r.dataset.k], is=[...r.querySelectorAll('i')];
+    r.classList.toggle('dim', r.dataset.k!==state.opt);
+    requestAnimationFrame(()=>{ is[0].style.width=(o.idaMin/max*100)+'%'; is[1].style.width=(o.vtaMin/max*100)+'%'; });
+  });
+}
+
+/* ======== PRESUPUESTO ======== */
+function drawBudget(){
+  const o=OPTS[state.opt], m=o[mode()], total=tripTotal(state.opt);
+  countTo($('#tot'), total);
+  $('#tot-ctx').innerHTML = `Opción <b>${state.opt}</b> (${o.name}), ${state.bag?'con valija':'solo carry-on'}, <b>${state.pax} personas</b>.`
+    + (state.pax===8?' Con 8 cambia el depto de Roma y el resto se reparte entre más.':'');
+  const parts=[
+    ['Vuelo largo', m.long, '#f3b63b'],
+    ['París → BCN + noche extra', m.par+m.night, '#f08a6a'],
+    ['Tramos dentro de Europa', EU[mode()], '#7fb0f0'],
+    ['Alojamiento (12 noches)', LODGE[state.pax], '#9ad4b4'],
+  ];
+  const st=$('#stack');
+  if(!st.children.length) parts.forEach(p=>st.insertAdjacentHTML('beforeend',`<div style="background:${p[2]};flex-grow:0"></div>`));
+  [...st.children].forEach((d,i)=>{ d.textContent = parts[i][1]? 'USD '+fmt(parts[i][1]) : ''; requestAnimationFrame(()=>{d.style.flexGrow=parts[i][1]; d.style.padding=parts[i][1]?'0 12px':'0';}); });
+  $('#stack-key').innerHTML = parts.map(p=>`<div class="sk${p[1]?'':' zero'}"><i style="background:${p[2]}"></i>${p[0]}<b>USD ${fmt(p[1])}</b></div>`).join('');
+
+  const cmp=$('#cmp'); const totals=Object.keys(OPTS).map(k=>[k,tripTotal(k)]); const mx=Math.max(...totals.map(t=>t[1]));
+  if(!cmp.children.length){
+    cmp.insertAdjacentHTML('beforeend','<div class="eyebrow" style="margin:0">Total del viaje según la opción de vuelo</div>');
+    totals.forEach(([k])=>cmp.insertAdjacentHTML('beforeend',`<div class="cmp-row" data-k="${k}" role="button" tabindex="0" aria-label="Elegir opción ${k}">
+      <span class="lt" style="background:${OPTS[k].color}">${k}</span>
+      <div><div class="nm">${OPTS[k].name}</div><div class="tr"><i style="width:0;background:${OPTS[k].color}"></i></div></div>
+      <span class="val num">0</span></div>`));
+    cmp.querySelectorAll('.cmp-row').forEach(r=>{ r.onclick=()=>{state.opt=r.dataset.k;update();}; r.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();r.click();}}; });
+  }
+  cmp.querySelectorAll('.cmp-row').forEach(r=>{
+    const v=tripTotal(r.dataset.k);
+    r.classList.toggle('dim', r.dataset.k!==state.opt);
+    requestAnimationFrame(()=>r.querySelector('i').style.width=(v/mx*100)+'%');
+    countTo(r.querySelector('.val'), v);
+  });
+}
+
+/* ======== ALOJAMIENTO ======== */
+function drawLodges(){
+  const box=$('#lodges'); box.innerHTML='';
+  LODGES.forEach(L=>{
+    const eight = state.pax===8 && L.url8;
+    const name = eight ? 'Gran Madonna dei Monti' : L.name;
+    const addr = eight ? 'Monti, Roma' : L.addr;
+    const url = eight ? L.url8 : L.url;
+    const mp = eight ? L.map8 : L.map;
+    box.insertAdjacentHTML('beforeend',`
+    <article class="lodge rv">
+      <div class="top" style="background:${L.city.color}"><small>${L.dates}</small><h3>${L.city.name}</h3></div>
+      <div class="body">
+        <div><div class="nm">${name}</div><div class="addr">${addr} · ${L.via}</div></div>
+        <div><span class="pill ${eight?'warn':L.status[0]}">${eight?'Opción para 8':L.status[1]}</span> <span class="carrier">${L.cancel}</span></div>
+        <div class="pp">
+          <div style="${state.pax===7?'outline:2px solid var(--ink)':''}"><small>7 personas</small><b class="num">USD ${L.p7}</b></div>
+          <div style="${state.pax===8?'outline:2px solid var(--ink)':''}"><small>8 personas</small><b class="num">USD ${L.p8}</b></div>
+        </div>
+        <div class="links">
+          <a class="btn solid" href="${url}" target="_blank" rel="noopener">Ver en ${L.via} ↗</a>
+          <a class="btn" href="https://www.google.com/maps?q=${mp[0]},${mp[1]}" target="_blank" rel="noopener">Mapa ↗</a>
+        </div>
+      </div>
+    </article>`);
+  });
+  observe(box.querySelectorAll('.rv'));
+}
+
+/* ======== INFO ======== */
+function drawInfo(){
+  $('#legs').innerHTML = LEGS.map(l=>`<tr><td>${l.day}</td><td>${l.from} → ${l.to}<br><span class="carrier">${l.how}${l.note?' · '+l.note:''}</span></td><td class="r num">USD ${l.carry}</td><td class="r num">USD ${l.bag}</td></tr>`).join('');
+  const mx=Math.max(...IBZ.map(i=>i[1]));
+  $('#ibz').innerHTML = IBZ.map(([n,v,sel])=>`<div class="ib${sel?' sel':''}"><span>${n}${sel?' <span class="pill good">elegido</span>':''}</span><div class="tr"><i style="width:${v/mx*100}%"></i></div><b class="num">${fmt(v)}</b></div>`).join('');
+}
+
+/* ======== VEREDICTO ======== */
+function drawVerdict(){
+  const ks=Object.keys(OPTS);
+  const tot=Object.fromEntries(ks.map(k=>[k,tripTotal(k)]));
+  const fr=Object.fromEntries(ks.map(k=>[k,freeTotal(k)]));
+  const hm=m=>`${Math.floor(m/60)} h${m%60?' '+String(m%60).padStart(2,'0'):''}`;
+  const cheapest=ks.reduce((a,b)=>tot[a]<=tot[b]?a:b);
+  const dB=tot.D-tot.B, gainFree=fr.D-fr.B, gainTravel=(TRAVEL.B-TRAVEL.D)/60;
+  const perH = dB/(gainFree+gainTravel);
+  $('#vcard').innerHTML=`
+    <div class="badge">★ La que más vale la pena</div>
+    <div class="big"><span class="letter">D</span><h3>LEVEL + British Airways<small>Ida directa a Barcelona, vuelta desde París</small></h3></div>
+    <ul>
+      <li><span class="ic">$</span><span>Cuesta <b>USD ${fmt(dB)} más</b> que la B (${state.bag?'con valija':'solo carry-on'}, ${state.pax} personas) y te devuelve <b>${Math.round(gainFree)} h más para pasear</b> y <b>${Math.round(gainTravel)} h menos de viaje</b>. Pagás unos <b>USD ${fmt(perH)} por cada hora</b> que ganás.</span></li>
+      <li><span class="ic">✈</span><span><b>Ida directa de ${OPTS.D.idaDur}</b>: llegás a Barcelona a las 11:40 del domingo, con el día por delante.</span></li>
+      <li><span class="ic">⌛</span><span><b>La vuelta más corta: ${OPTS.D.vtaDur}</b> desde París. No hay que volver a Barcelona ni dormir una noche extra.</span></li>
+      <li><span class="ic">🗼</span><span><b>El último día en París es casi entero</b>: el vuelo sale 20:25, te vas del depto 17:30.</span></li>
+    </ul>
+    <div class="cav"><b>Antes de comprar:</b> el precio con valija lo busqué para 1 pasajero, hay que confirmarlo para ${state.pax}. Se compra por agencia, así que cambiar o cancelar es más difícil que en la web de una aerolínea.</div>
+    <div class="alt">Si querés lo más seguro y barato: <b>la B (LATAM)</b>, que deja cancelar gratis 24 h. La más barata de todas es la ${cheapest}${cheapest==='A'?', pero tiene Ryanair y 38 h de vuelta':''}.</div>`;
+  const cols=[
+    ['Total viaje',k=>tot[k],v=>'USD '+fmt(v),'min'],
+    ['Horas libres',k=>fr[k],v=>Math.round(v)+' h','max'],
+    ['Horas de viaje',k=>TRAVEL[k],v=>hm(v),'min'],
+    ['Escalas',k=>STOPS[k],v=>v,'min'],
+  ];
+  let h='<thead><tr><th>Opción</th>'+cols.map(c=>`<th>${c[0]}</th>`).join('')+'<th style="text-align:left">Punto flojo</th></tr></thead><tbody>';
+  ks.forEach(k=>{
+    h+=`<tr class="${k==='D'?'sel':''}"><td><span class="lt" style="background:${OPTS[k].color}">${k}</span>${OPTS[k].name.split(' + ')[0]}</td>`;
+    cols.forEach(([,f,fm,dir])=>{
+      const vals=ks.map(f), v=f(k), best=dir==='min'?Math.min(...vals):Math.max(...vals), worst=dir==='min'?Math.max(...vals):Math.min(...vals);
+      h+=`<td class="num ${v===best?'best':v===worst?'worst':''}">${fm(v)}</td>`;
+    });
+    h+=`<td class="flojo">${FLOJO[k]}</td></tr>`;
+  });
+  $('#vtable').innerHTML=h+'</tbody>';
+}
+
+/* ======== TIEMPO LIBRE ======== */
+function drawFree(){
+  const hf=document.getElementById('hero-free'); if(hf) hf.textContent='~'+Math.round(freeTotal(state.opt))+' h para pasear (opción '+state.opt+')';
+  const rows=freeFor(state.opt), tot=rows.reduce((s,r)=>s+r.h,0), mx=42;
+  countTo($('#free-tot'), Math.round(tot));
+  $('#free-sub').textContent = `en total con la opción ${state.opt} · equivale a ${(tot/15).toFixed(1).replace('.',',')} días completos de 9 a 24`;
+  const mo=$('#mini-opts');
+  if(!mo.children.length){
+    for(const k in OPTS) mo.insertAdjacentHTML('beforeend',`<button type="button" data-k="${k}" style="background:${OPTS[k].color}" aria-label="Opción ${k}">${k}</button>`);
+    mo.querySelectorAll('button').forEach(b=>b.onclick=()=>{state.opt=b.dataset.k;update();});
+  }
+  mo.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.k===state.opt)));
+  const box=$('#free');
+  const ids=rows.map(r=>r.c.id||r.c.name).join();
+  if(box.dataset.ids!==ids){
+    box.dataset.ids=ids; box.innerHTML='';
+    rows.forEach(r=>box.insertAdjacentHTML('beforeend',`<div class="fr${r.extra?' extra':''}">
+      <div><h3>${r.c.name}</h3><div class="when"></div></div>
+      <div class="tr-wrap"><div class="tr"><i style="width:0;background:${r.c.color}"></i></div><div class="chips"></div></div>
+      <div class="h num"><span>0</span><small>horas libres</small></div></div>`));
+  }
+  [...box.children].forEach((el,i)=>{
+    const r=rows[i];
+    el.querySelector('.when').innerHTML=r.when.join('<br>');
+    el.querySelector('.chips').innerHTML=r.span.map(([d,h])=>`<span class="${h?'':'zero'}">${DOW[new Date(2027,7,d).getDay()]} ${d}: ${fmtH(h)}</span>`).join('');
+    requestAnimationFrame(()=>el.querySelector('i').style.width=Math.min(100,r.h/mx*100)+'%');
+    const sp=el.querySelector('.h span'); sp.textContent=fmtH(r.h);
+  });
+  // horas en la lista de paradas
+  rows.forEach(r=>{ const t=document.getElementById('fh-'+r.c.id); if(t) t.textContent=fmtH(r.h)+' para pasear'; });
+}
+
+/* ======== estado ======== */
+function update(){
+  document.querySelectorAll('[data-swpax]').forEach(b=>{const on=state.pax===8; b.setAttribute('aria-checked',String(on)); b.querySelector('.knob').textContent=state.pax; b.querySelector('.lbl-on').classList.toggle('on',on); b.querySelector('.lbl-off').classList.toggle('on',!on);});
+  document.querySelectorAll('[data-sw]').forEach(b=>{b.setAttribute('aria-checked',String(state.bag)); b.querySelector('.lbl-on').classList.toggle('on',state.bag); b.querySelector('.lbl-off').classList.toggle('on',!state.bag);});
+  document.querySelectorAll('#seg-bag button').forEach(b=>b.setAttribute('aria-pressed', String((b.dataset.bag==='1')===state.bag)));
+  document.querySelectorAll('#seg-pax button').forEach(b=>b.setAttribute('aria-pressed', String(+b.dataset.pax===state.pax)));
+  drawTabs(); drawItin(); drawBreakdown(); drawDur(); drawBudget(); drawLodges(); drawFree(); drawVerdict();
+  const prevBack = drawMap._back; const back = !!OPTS[state.opt].par;
+  if(prevBack!==back || drawMap._first===undefined){ drawMap(); drawMap._first=1; drawMap._back=back; }
+}
+document.querySelectorAll('[data-sw]').forEach(b=>b.onclick=()=>{state.bag=!state.bag;update();});
+document.querySelectorAll('[data-swpax]').forEach(b=>b.onclick=()=>{state.pax=state.pax===7?8:7;update();});
+document.querySelectorAll('#seg-bag button').forEach(b=>b.onclick=()=>{state.bag=b.dataset.bag==='1';update();});
+document.querySelectorAll('#seg-pax button').forEach(b=>b.onclick=()=>{state.pax=+b.dataset.pax;update();});
+
+/* ======== reveal al hacer scroll (contenido visible en reposo) ======== */
+const seen = new WeakSet();
+const io = 'IntersectionObserver' in window && !REDUCED ? new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    if(!e.isIntersecting || seen.has(e.target)) return;
+    seen.add(e.target);
+    if(e.target.id==='map'){ playMapDraw(); return; }
+    e.target.classList.add('play');
+  });
+},{threshold:.15}) : null;
+function observe(list){ if(io) list.forEach((el,i)=>{ el.style.animationDelay=(i%6*.07)+'s'; io.observe(el); }); }
+
+drawStops(); drawInfo(); update();
+observe(document.querySelectorAll('.rv'));
+if(io) io.observe($('#map'));
+</script>
+</body>
+</html>
