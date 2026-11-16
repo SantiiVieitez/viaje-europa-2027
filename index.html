@@ -164,6 +164,8 @@ section{padding:64px 0}
 
 /* ---------- OPCIONES ---------- */
 .opt-tabs{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.swipe-hint{display:none;font-size:12px;color:var(--muted);margin-bottom:6px}
+@media (max-width:640px){.swipe-hint{display:block}}
 .opt{all:unset;box-sizing:border-box;cursor:pointer;background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:14px;display:grid;gap:4px;position:relative;transition:transform .25s,border-color .25s,box-shadow .25s}
 .opt:hover{transform:translateY(-3px)}
 .opt[aria-pressed="true"]{border-color:var(--ink);box-shadow:0 10px 30px -14px rgba(18,26,58,.5)}
@@ -265,7 +267,7 @@ section{padding:64px 0}
 table{width:100%;border-collapse:collapse;font-size:14px}
 th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);padding:8px 8px 8px 0;border-bottom:1px solid var(--line)}
 td{padding:10px 8px 10px 0;border-bottom:1px solid var(--line);vertical-align:top}
-td.r,th.r{text-align:right}
+td.r,th.r{text-align:right;white-space:nowrap}
 .tbl{overflow-x:auto}
 .legs-table td:first-child{white-space:nowrap;font-weight:600}
 .ibz-bars{display:grid;gap:8px;margin-top:14px}
@@ -283,6 +285,60 @@ footer{padding:36px 0 60px;color:var(--muted);font-size:13px}
   .days{grid-template-columns:repeat(7,1fr)}
   .ib{grid-template-columns:110px 1fr 52px}
   .cd{min-width:74px}.cd b{font-size:28px}
+}
+/* ---------- CELULAR ---------- */
+.map-grid>*,.detail>*,.verdict>*,.info-grid>*{min-width:0}
+@media (max-width:640px){
+  section{padding:44px 0}
+  .wrap{padding:0 16px}
+  .hero-inner{padding:40px 16px 32px;gap:22px}
+  .route-line{gap:6px}
+  .route-line .chip{font-size:12px;padding:4px 9px}
+  .countdown{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .cd{min-width:0;padding:10px 8px;text-align:center}
+  .cd b{font-size:26px}
+  .cd small{font-size:10px;letter-spacing:.06em}
+  .map-card{padding:4px;border-radius:16px}
+  .city-sub,.leg-lbl,.grat-lbl{display:none}
+  .city-lbl{font-size:26px}
+  .stop{padding:10px 12px;gap:10px}
+  .stop h3{font-size:17px}
+  .stop .n{font-size:22px}
+  .controls{gap:8px 10px;padding:8px 0;margin:18px 0 14px}
+  .controls .ctl-label{display:none}
+  .seg button{padding:7px 11px;font-size:13px}
+  .opt-tabs{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;margin:0 -16px;padding:4px 16px 12px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .opt-tabs::-webkit-scrollbar{display:none}
+  .opt{flex:0 0 72%;scroll-snap-align:start}
+  .opt:hover{transform:none}
+  .panel{padding:16px;border-radius:16px}
+  .panel h3{font-size:19px}
+  .trip-h{flex-direction:column;align-items:flex-start;gap:2px}
+  .node{min-width:52px}
+  .node .code{font-size:13px}
+  .seg-line{min-width:22px}
+  .btotal b{font-size:34px}
+  .big-total{gap:8px}
+  .big-total .ctx{padding-bottom:0}
+  .stack{height:44px;margin-top:20px}
+  .stack div{font-size:12px}
+  .cmp-row{grid-template-columns:28px 1fr 56px;gap:8px}
+  .cmp-row .val{font-size:14px}
+  .swrow{gap:12px 18px}
+  .swrow .hint{flex-basis:100%}
+  .sw{font-size:14px;gap:8px}
+  .vcard{padding:18px;border-radius:18px}
+  .vcard .big .letter{width:56px;height:56px;font-size:34px}
+  .vcard .big h3{font-size:22px}
+  .vtable{min-width:600px}
+  .vtable .flojo{min-width:170px}
+  .free-head{margin-top:18px}
+  .fr{padding:12px 14px;gap:10px}
+  .fr .h{font-size:22px}
+  .lodges{grid-template-columns:1fr}
+  .lodge .top h3{font-size:22px}
+  .ib{grid-template-columns:120px 1fr 48px;font-size:13px}
+  .dur-chart,.chart{margin-top:16px}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
@@ -372,6 +428,7 @@ footer{padding:36px 0 60px;color:var(--muted);font-size:13px}
       </div>
     </div>
 
+    <div class="swipe-hint">Deslizá para ver las 5 opciones →</div>
     <div class="opt-tabs" id="opt-tabs" role="group" aria-label="Opción de vuelo"></div>
 
     <div class="detail">
@@ -395,13 +452,13 @@ footer{padding:36px 0 60px;color:var(--muted);font-size:13px}
     <div class="eyebrow rv">La que más vale la pena</div>
     <h2 class="h2 rv">¿Cuál conviene comprar?</h2>
     <p class="lead rv">Comparo lo que cuesta cada opción contra lo que te da: horas libres en Europa, horas metidos en aviones y aeropuertos, escalas y riesgo. Los números siguen los selectores de valija y personas.</p>
-    <div class="swrow"><button type="button" class="sw light" role="switch" aria-checked="false" data-sw id="sw-conviene"><span class="lbl lbl-off">Sin valija</span><span class="swt"><span class="knob">🧳</span></span><span class="lbl lbl-on">Con valija</span></button><button type="button" class="sw" role="switch" aria-checked="false" data-swpax id="swp-budget" aria-label="8 personas"><span class="lbl lbl-off">7 personas</span><span class="swt"><span class="knob num">7</span></span><span class="lbl lbl-on">8 personas</span></button><span class="hint">Cambia todos los precios de la página</span></div>
+    <div class="swrow"><button type="button" class="sw light" role="switch" aria-checked="false" data-sw id="sw-conviene"><span class="lbl lbl-off">Sin valija</span><span class="swt"><span class="knob">🧳</span></span><span class="lbl lbl-on">Con valija</span></button><button type="button" class="sw light" role="switch" aria-checked="false" data-swpax id="swp-conviene" aria-label="8 personas"><span class="lbl lbl-off">7 personas</span><span class="swt"><span class="knob num">7</span></span><span class="lbl lbl-on">8 personas</span></button><span class="hint">Cambia todos los precios de la página</span></div>
     <div class="verdict">
       <div class="vcard rv" id="vcard"></div>
       <div class="panel rv" style="padding:16px 18px">
         <h3 style="font-size:20px">Las 5 lado a lado</h3>
         <div class="sub">Verde = la mejor en esa columna · rojo = la peor</div>
-        <div class="tbl"><table class="vtable" id="vtable"></table></div>
+        <div class="swipe-hint">Deslizá la tabla para ver todo →</div><div class="tbl"><table class="vtable" id="vtable"></table></div>
       </div>
     </div>
   </div>
@@ -413,7 +470,7 @@ footer{padding:36px 0 60px;color:var(--muted);font-size:13px}
     <div class="eyebrow">Presupuesto por persona</div>
     <h2 class="h2">Lo que sale el viaje entero</h2>
     <p class="lead">Vuelo largo + tramos dentro de Europa + alojamiento. No incluye comida, salidas ni traslados al aeropuerto.</p>
-    <div class="swrow"><button type="button" class="sw" role="switch" aria-checked="false" data-sw id="sw-budget"><span class="lbl lbl-off">Sin valija</span><span class="swt"><span class="knob">🧳</span></span><span class="lbl lbl-on">Con valija</span></button><button type="button" class="sw light" role="switch" aria-checked="false" data-swpax id="swp-conviene" aria-label="8 personas"><span class="lbl lbl-off">7 personas</span><span class="swt"><span class="knob num">7</span></span><span class="lbl lbl-on">8 personas</span></button><span class="hint">Cambia todos los precios de la página</span></div>
+    <div class="swrow"><button type="button" class="sw" role="switch" aria-checked="false" data-sw id="sw-budget"><span class="lbl lbl-off">Sin valija</span><span class="swt"><span class="knob">🧳</span></span><span class="lbl lbl-on">Con valija</span></button><button type="button" class="sw" role="switch" aria-checked="false" data-swpax id="swp-budget" aria-label="8 personas"><span class="lbl lbl-off">7 personas</span><span class="swt"><span class="knob num">7</span></span><span class="lbl lbl-on">8 personas</span></button><span class="hint">Cambia todos los precios de la página</span></div>
     <div class="big-total">
       <div class="v num"><sup>USD</sup><span id="tot">0</span></div>
       <div class="ctx" id="tot-ctx"></div>
@@ -763,7 +820,7 @@ function drawStops(){
 
 /* ======== OPCIONES DE VUELO ======== */
 function drawTabs(){
-  const box=$('#opt-tabs'); box.innerHTML='';
+  const box=$('#opt-tabs'); const sl=box.scrollLeft; box.innerHTML='';
   for(const k in OPTS){
     const o=OPTS[k];
     box.insertAdjacentHTML('beforeend',`
@@ -776,6 +833,7 @@ function drawTabs(){
         <span class="fh num">${fmtH(freeTotal(k))} libres en Europa</span>
       </button>`);
   }
+  box.scrollLeft=sl;
   box.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{state.opt=b.dataset.k; update();});
 }
 function track(leg, isTrain){
