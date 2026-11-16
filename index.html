@@ -114,6 +114,44 @@ section{padding:64px 0}
 .opt .fh{font-size:12px;color:var(--muted);font-weight:600}
 @media (max-width:640px){.fr{grid-template-columns:1fr 80px}.fr .tr-wrap{grid-column:1/-1;grid-row:2}}
 
+/* ---------- BARRA FIJA ---------- */
+.topbar{position:sticky;top:0;z-index:50;background:rgba(18,26,58,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#f4f1ea;border-bottom:1px solid rgba(255,255,255,.08)}
+.tb-in{max-width:1120px;margin:0 auto;padding:8px 20px;display:flex;align-items:center;gap:18px;overflow-x:auto;scrollbar-width:none}
+.tb-in::-webkit-scrollbar{display:none}
+.tb-brand{font-family:var(--f-display);font-weight:800;font-size:18px;text-decoration:none;white-space:nowrap;color:var(--sun)}
+.tb-group{display:flex;align-items:center;gap:8px;flex:none}
+.tb-lbl{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;opacity:.55}
+.tseg{display:inline-flex;background:rgba(255,255,255,.08);border-radius:999px;padding:3px;gap:2px}
+.tseg button{all:unset;cursor:pointer;padding:6px 11px;border-radius:999px;font-weight:600;font-size:13px;white-space:nowrap;color:rgba(244,241,234,.7);transition:background .25s,color .25s}
+.tseg button b{font-family:var(--f-display);font-weight:800}
+.tseg button[aria-pressed="true"]{background:#f4f1ea;color:var(--ink)}
+.tseg button:focus-visible,.tsw:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+#tb-opt button{width:28px;height:28px;padding:0;display:grid;place-items:center;font-family:var(--f-display);font-weight:800}
+#tb-opt button[aria-pressed="true"]{color:#fff}
+.tseg .abbr{display:none}
+.tsw{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;white-space:nowrap}
+.tsw .swt{width:52px;height:28px;border-radius:999px;background:rgba(255,255,255,.18);position:relative;transition:background .35s;flex:none}
+.tsw .knob{position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;display:grid;place-items:center;font-size:12px;transition:transform .45s cubic-bezier(.3,1.5,.5,1)}
+.tsw[aria-checked="true"] .swt{background:var(--sun)}
+.tsw[aria-checked="true"] .knob{transform:translateX(24px) rotate(360deg)}
+.tb-total{margin-left:auto;text-align:right;flex:none;line-height:1.1}
+.tb-total small{display:block;font-size:10px;opacity:.6;text-transform:uppercase;letter-spacing:.1em}
+.tb-total b{font-family:var(--f-display);font-size:20px;color:var(--sun)}
+.tb-total.bump b{animation:bump .5s ease}
+@keyframes bump{40%{transform:scale(1.12)}}
+@media (max-width:900px){.tseg .full{display:none}.tseg .abbr{display:inline}.tb-brand{display:none}}
+@media (max-width:640px){
+  .tb-in{padding:6px 12px;gap:6px 10px;flex-wrap:wrap;overflow:visible;justify-content:space-between}
+  .tb-group:first-of-type{order:0}
+  .tb-total{order:1;margin-left:0}
+  .tb-group:nth-of-type(2),.tb-group:nth-of-type(3),.tb-group:nth-of-type(4){order:2}
+  #tb-opt button{width:26px;height:26px}
+  .tseg button{padding:5px 9px;font-size:12px}
+  .tb-lbl{display:none}
+  .tsw-txt{display:none}
+  .tb-total b{font-size:17px}
+}
+
 /* ---------- SWITCH VALIJA ---------- */
 .swrow{display:flex;align-items:center;gap:14px 28px;margin-top:22px;flex-wrap:wrap}
 .sw{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:12px;font-weight:700;font-size:15px}
@@ -155,7 +193,7 @@ section{padding:64px 0}
 @media (max-width:900px){.verdict{grid-template-columns:1fr}}
 
 /* ---------- CONTROLES ---------- */
-.controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:26px 0 18px;position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(8px);padding:10px 0;border-bottom:1px solid var(--line)}
+.controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:26px 0 18px;z-index:5;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(8px);padding:10px 0;border-bottom:1px solid var(--line)}
 .seg{display:inline-flex;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px;gap:2px}
 .seg button{all:unset;cursor:pointer;padding:8px 14px;border-radius:999px;font-weight:600;font-size:14px;color:var(--muted);transition:background .25s,color .25s}
 .seg button[aria-pressed="true"]{background:var(--ink);color:#fff}
@@ -347,23 +385,33 @@ footer{padding:36px 0 60px;color:var(--muted);font-size:13px}
 </head>
 <body>
 
+<!-- BARRA FIJA -->
+<nav class="topbar" aria-label="Opciones del viaje">
+  <div class="tb-in">
+    <a class="tb-brand" href="#top">Europa 27</a>
+    <div class="tb-group"><span class="tb-lbl">Ruta</span>
+      <div class="tseg" id="tb-route">
+        <button type="button" data-route="con" aria-pressed="true"><b>A</b> <span class="full">Con Ámsterdam</span><span class="abbr">Con AMS</span></button>
+        <button type="button" data-route="sin" aria-pressed="false"><b>B</b> <span class="full">Sin Ámsterdam</span><span class="abbr">Sin AMS</span></button>
+      </div></div>
+    <div class="tb-group"><span class="tb-lbl">Vuelo</span><div class="tseg" id="tb-opt"></div></div>
+    <div class="tb-group"><span class="tb-lbl">Valija</span>
+      <button type="button" class="tsw" role="switch" aria-checked="true" id="tb-bag" aria-label="Con valija despachada"><span class="swt"><span class="knob">🧳</span></span><span class="tsw-txt" id="tb-bag-txt">Con valija</span></button></div>
+    <div class="tb-group"><span class="tb-lbl">Personas</span>
+      <div class="tseg" id="tb-pax"><button type="button" data-pax="6" aria-pressed="true">6</button><button type="button" data-pax="7" aria-pressed="false">7</button></div></div>
+    <div class="tb-total"><small>por persona</small><b class="num">USD <span id="tb-tot">0</span></b></div>
+  </div>
+</nav>
+
 <!-- HERO -->
 <header class="hero" id="top">
   <canvas id="sky" aria-hidden="true"></canvas>
   <div class="hero-inner">
     <div>
-      <div class="eyebrow">7 amigos (quizás 8) · 08 → 20 de agosto 2027</div>
+      <div class="eyebrow">6 amigos (quizás 7) · 08 → 20 de agosto 2027</div>
       <h1><span>Europa</span><span class="stroke">agosto 27</span></h1>
     </div>
-    <div class="route-line" aria-label="Recorrido">
-      <span class="chip">Buenos Aires</span><span class="arr">→</span>
-      <span class="chip" style="border-color:var(--bcn)">Barcelona</span><span class="arr">→</span>
-      <span class="chip" style="border-color:var(--ibz)">Ibiza</span><span class="arr">→</span>
-      <span class="chip" style="border-color:var(--rom)">Roma</span><span class="arr">→</span>
-      <span class="chip" style="border-color:var(--ams)">Ámsterdam</span><span class="arr">→</span>
-      <span class="chip" style="border-color:var(--par)">París</span><span class="arr">→</span>
-      <span class="chip">Buenos Aires</span>
-    </div>
+    <div class="route-line" aria-label="Recorrido" id="route-line"></div>
     <div class="countdown" aria-label="Cuenta regresiva a la salida (sábado 7 de agosto 2027)">
       <div class="cd"><b id="cd-d" class="num">—</b><small>días</small></div>
       <div class="cd"><b id="cd-h" class="num">—</b><small>horas</small></div>
@@ -371,7 +419,7 @@ footer{padding:36px 0 60px;color:var(--muted);font-size:13px}
       <div class="cd"><b id="cd-s" class="num">—</b><small>seg</small></div>
     </div>
     <div class="hero-meta">
-      <span>5 ciudades · 12 noches · 4 tramos dentro de Europa · <b id="hero-free"></b></span>
+      <span><span id="hero-sum"></span> · <b id="hero-free"></b></span>
       <a href="https://docs.google.com/spreadsheets/d/1_GoG4Saj0sEkQXVtvIiNgpTVODGWzY2e9A-bbSQGl68/edit">Abrir la planilla ↗</a>
     </div>
   </div>
@@ -381,7 +429,7 @@ footer{padding:36px 0 60px;color:var(--muted);font-size:13px}
 <section id="ruta">
   <div class="wrap">
     <div class="eyebrow rv">La ruta</div>
-    <h2 class="h2 rv">Doce noches, cinco ciudades</h2>
+    <h2 class="h2 rv" id="ruta-h">Doce noches, cinco ciudades</h2>
     <p class="lead rv">Los tramos dentro de Europa son iguales para todas las opciones. Lo que cambia es cómo llegamos y cómo volvemos.</p>
     <div class="map-grid">
       <div class="map-card rv">
@@ -404,7 +452,7 @@ footer{padding:36px 0 60px;color:var(--muted);font-size:13px}
       <div><div class="ctl-label" style="margin-bottom:6px">Opción de vuelo</div><div class="mini-opts" id="mini-opts" role="group" aria-label="Opción de vuelo"></div></div>
     </div>
     <div class="free" id="free"></div>
-    <p class="free-note">Cómo lo calculé: cuento de 9:00 a 24:00 (las salidas de noche van aparte). Desde que aterrizamos hasta estar en el alojamiento, 1 h 30 (valijas + traslado). Para un vuelo salimos del alojamiento 2 h 30 antes; para Beauvais (Ryanair), 4 h antes. El horario del Eurostar Ámsterdam → París todavía no está en la planilla: supuse que salimos a las 9:30 y llegamos al depto de París a las 14:30.</p>
+    <p class="free-note">Cómo lo calculé: cuento de 9:00 a 24:00 (las salidas de noche van aparte). Desde que aterrizamos hasta estar en el alojamiento, 1 h 30 (valijas + traslado). Para un vuelo salimos del alojamiento 2 h 30 antes; para Beauvais (Ryanair), 4 h antes. <span id="free-note-route"></span></p>
   </div>
 </section>
 
@@ -413,20 +461,7 @@ footer{padding:36px 0 60px;color:var(--muted);font-size:13px}
   <div class="wrap">
     <div class="eyebrow rv">Vuelos</div>
     <h2 class="h2 rv">Cinco formas de ir y volver</h2>
-    <p class="lead rv">Precios en USD por persona, buscados para 7 pasajeros. Elegí una opción y si viajan con valija despachada; todo lo de abajo se recalcula.</p>
-
-    <div class="controls" role="group" aria-label="Opciones de cálculo">
-      <span class="ctl-label">Equipaje</span>
-      <div class="seg" id="seg-bag">
-        <button type="button" data-bag="0" aria-pressed="true">Solo carry-on</button>
-        <button type="button" data-bag="1" aria-pressed="false">Con valija</button>
-      </div>
-      <span class="ctl-label">Personas</span>
-      <div class="seg" id="seg-pax">
-        <button type="button" data-pax="7" aria-pressed="true">7</button>
-        <button type="button" data-pax="8" aria-pressed="false">8</button>
-      </div>
-    </div>
+    <p class="lead rv">Precios en USD por persona, buscados para 7 pasajeros. Elegí la opción, la valija y la cantidad de personas desde la barra de arriba; todo se recalcula.</p>
 
     <div class="swipe-hint">Deslizá para ver las 5 opciones →</div>
     <div class="opt-tabs" id="opt-tabs" role="group" aria-label="Opción de vuelo"></div>
@@ -451,8 +486,7 @@ footer{padding:36px 0 60px;color:var(--muted);font-size:13px}
   <div class="wrap">
     <div class="eyebrow rv">La que más vale la pena</div>
     <h2 class="h2 rv">¿Cuál conviene comprar?</h2>
-    <p class="lead rv">Comparo lo que cuesta cada opción contra lo que te da: horas libres en Europa, horas metidos en aviones y aeropuertos, escalas y riesgo. Los números siguen los selectores de valija y personas.</p>
-    <div class="swrow"><button type="button" class="sw light" role="switch" aria-checked="false" data-sw id="sw-conviene"><span class="lbl lbl-off">Sin valija</span><span class="swt"><span class="knob">🧳</span></span><span class="lbl lbl-on">Con valija</span></button><button type="button" class="sw light" role="switch" aria-checked="false" data-swpax id="swp-conviene" aria-label="8 personas"><span class="lbl lbl-off">7 personas</span><span class="swt"><span class="knob num">7</span></span><span class="lbl lbl-on">8 personas</span></button><span class="hint">Cambia todos los precios de la página</span></div>
+    <p class="lead rv">Comparo lo que cuesta cada opción contra lo que te da: horas libres en Europa, horas metidos en aviones y aeropuertos, escalas y riesgo. Los números siguen la barra de arriba (ruta, valija y personas).</p>
     <div class="verdict">
       <div class="vcard rv" id="vcard"></div>
       <div class="panel rv" style="padding:16px 18px">
@@ -470,7 +504,6 @@ footer{padding:36px 0 60px;color:var(--muted);font-size:13px}
     <div class="eyebrow">Presupuesto por persona</div>
     <h2 class="h2">Lo que sale el viaje entero</h2>
     <p class="lead">Vuelo largo + tramos dentro de Europa + alojamiento. No incluye comida, salidas ni traslados al aeropuerto.</p>
-    <div class="swrow"><button type="button" class="sw" role="switch" aria-checked="false" data-sw id="sw-budget"><span class="lbl lbl-off">Sin valija</span><span class="swt"><span class="knob">🧳</span></span><span class="lbl lbl-on">Con valija</span></button><button type="button" class="sw" role="switch" aria-checked="false" data-swpax id="swp-budget" aria-label="8 personas"><span class="lbl lbl-off">7 personas</span><span class="swt"><span class="knob num">7</span></span><span class="lbl lbl-on">8 personas</span></button><span class="hint">Cambia todos los precios de la página</span></div>
     <div class="big-total">
       <div class="v num"><sup>USD</sup><span id="tot">0</span></div>
       <div class="ctx" id="tot-ctx"></div>
@@ -486,7 +519,7 @@ footer{padding:36px 0 60px;color:var(--muted);font-size:13px}
   <div class="wrap">
     <div class="eyebrow rv">Alojamiento</div>
     <h2 class="h2 rv">Dónde dormimos</h2>
-    <p class="lead rv">Precio por persona por toda la estadía en cada ciudad. Con 8 personas cambia el depto de Roma.</p>
+    <p class="lead rv">Precio por persona por toda la estadía en cada ciudad. Para 6 personas calculé los mismos alojamientos divididos entre 6.</p>
     <div class="lodges" id="lodges"></div>
   </div>
 </section>
@@ -502,7 +535,7 @@ footer{padding:36px 0 60px;color:var(--muted);font-size:13px}
         <div class="tbl"><table class="legs-table">
           <thead><tr><th>Día</th><th>Tramo</th><th class="r">Carry-on</th><th class="r">Valija</th></tr></thead>
           <tbody id="legs"></tbody>
-          <tfoot><tr><td></td><td><b>Subtotal</b></td><td class="r"><b>USD 207</b></td><td class="r"><b>USD 396</b></td></tr></tfoot>
+          <tfoot><tr id="legs-sub"></tr></tfoot>
         </table></div>
       </div>
       <div class="panel rv">
@@ -543,28 +576,65 @@ footer{padding:36px 0 60px;color:var(--muted);font-size:13px}
 </section>
 
 <footer>
-  <div class="wrap">Datos tomados de la planilla “Viaje Europa agosto 2027 – Presupuesto y links”. Precios buscados en noviembre 2026; pueden cambiar. El precio con valija de la opción D se buscó para 1 pasajero.</div>
+  <div class="wrap">Datos tomados de la planilla “Viaje Europa agosto 2027 – Presupuesto y links”. Precios buscados en noviembre 2026; pueden cambiar. El precio con valija de la opción D se buscó para 1 pasajero. Sin Ámsterdam, el vuelo Roma → París es una estimación.</div>
 </footer>
 
 <script>
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /* ======== DATOS (de la planilla) ======== */
-const CITIES = [
-  {id:'bcn', name:'Barcelona', color:'var(--bcn)', hex:'#e8553d', lat:41.387, lon:2.169, from:8, to:10, nights:2},
-  {id:'ibz', name:'Ibiza', color:'var(--ibz)', hex:'#16a097', lat:38.891, lon:1.407, from:10, to:12, nights:2},
-  {id:'rom', name:'Roma', color:'var(--rom)', hex:'#c38a17', lat:41.895, lon:12.50, from:12, to:15, nights:3},
-  {id:'ams', name:'Ámsterdam', color:'var(--ams)', hex:'#3a6fe0', lat:52.37, lon:4.90, from:15, to:18, nights:3},
-  {id:'par', name:'París', color:'var(--par)', hex:'#8a4fd0', lat:48.863, lon:2.335, from:18, to:20, nights:2},
-];
-const LEGS = [
-  {day:'Mar 10/08', from:'Barcelona', to:'Ibiza', how:'Vueling 18:15 → 19:20', mode:'✈', carry:25, bag:84},
-  {day:'Jue 12/08', from:'Ibiza', to:'Roma (FCO)', how:'Wizz Air 08:25 → 10:20', mode:'✈', carry:34, bag:74},
-  {day:'Dom 15/08', from:'Roma', to:'Ámsterdam', how:'ITA 08:30 → 11:00', mode:'✈', carry:109, bag:199, note:'con valija: Economy Flex'},
-  {day:'Mié 18/08', from:'Ámsterdam', to:'París Nord', how:'Eurostar (tren)', mode:'🚆', carry:39, bag:39},
-];
-const EU = {carry:207, bag:396};
-const LODGE = {7:841, 8:882};
+const CITY = {
+  bcn:{name:'Barcelona', color:'var(--bcn)', hex:'#e8553d', lat:41.387, lon:2.169},
+  ibz:{name:'Ibiza', color:'var(--ibz)', hex:'#16a097', lat:38.891, lon:1.407},
+  rom:{name:'Roma', color:'var(--rom)', hex:'#c38a17', lat:41.895, lon:12.50},
+  ams:{name:'Ámsterdam', color:'var(--ams)', hex:'#3a6fe0', lat:52.37, lon:4.90},
+  par:{name:'París', color:'var(--par)', hex:'#8a4fd0', lat:48.863, lon:2.335},
+};
+const ROUTES = {
+  con:{label:'Con Ámsterdam', short:'Con AMS', ciudades:'cinco',
+    stays:[['bcn',8,10],['ibz',10,12],['rom',12,15],['ams',15,18],['par',18,20]],
+    legs:[
+      {day:'Mar 10/08', from:'Barcelona', to:'Ibiza', carrier:'Vueling', how:'Vueling 18:15 → 19:20', mode:'✈', carry:25, bag:84},
+      {day:'Jue 12/08', from:'Ibiza', to:'Roma (FCO)', carrier:'Wizz Air', how:'Wizz Air 08:25 → 10:20', mode:'✈', carry:34, bag:74},
+      {day:'Dom 15/08', from:'Roma', to:'Ámsterdam', carrier:'ITA', how:'ITA 08:30 → 11:00', mode:'✈', carry:109, bag:199, note:'con valija: Economy Flex'},
+      {day:'Mié 18/08', from:'Ámsterdam', to:'París Nord', carrier:'Eurostar', how:'Eurostar (tren)', mode:'🚆', train:true, carry:39, bag:39},
+    ],
+    free:{bcnEnd:[[10,15.5],'Salimos 15:30 mar 10 (Vueling 18:15)'],
+      mid:[
+        ['ibz',[10,20.5],[12,6.5],'Llegamos 20:30 mar 10','Salimos 06:30 jue 12 (Wizz 08:25)'],
+        ['rom',[12,12],[15,6],'Llegamos 12:00 jue 12','Salimos 06:00 dom 15 (ITA 08:30)'],
+        ['ams',[15,12.5],[18,9.5],'Llegamos 12:30 dom 15','Salimos 09:30 mié 18 (Eurostar)'],
+      ],
+      parStart:[[18,14.5],'Llegamos 14:30 mié 18']},
+    freeNote:'El horario del Eurostar Ámsterdam → París todavía no está en la planilla: supuse que salimos a las 9:30 y llegamos al depto de París a las 14:30.'},
+  sin:{label:'Sin Ámsterdam', short:'Sin AMS', ciudades:'cuatro',
+    stays:[['bcn',8,12],['ibz',12,14],['rom',14,17],['par',17,20]],
+    legs:[
+      {day:'Jue 12/08', from:'Barcelona', to:'Ibiza', carrier:'Vueling', how:'Vueling 18:15 → 19:20', mode:'✈', carry:25, bag:84, note:'precio de las fechas originales'},
+      {day:'Sáb 14/08', from:'Ibiza', to:'Roma (FCO)', carrier:'Wizz Air', how:'Wizz Air 08:25 → 10:20', mode:'✈', carry:34, bag:74, note:'precio de las fechas originales'},
+      {day:'Mar 17/08', from:'Roma', to:'París', carrier:'a buscar', how:'Vuelo a la mañana (a buscar)', mode:'✈', carry:80, bag:130, note:'precio estimado, no buscado'},
+    ],
+    free:{bcnEnd:[[12,15.5],'Salimos 15:30 jue 12 (Vueling 18:15)'],
+      mid:[
+        ['ibz',[12,20.5],[14,6.5],'Llegamos 20:30 jue 12','Salimos 06:30 sáb 14 (Wizz 08:25)'],
+        ['rom',[14,12],[17,6],'Llegamos 12:00 sáb 14','Salimos 06:00 mar 17 (vuelo ~08:30, a confirmar)'],
+      ],
+      parStart:[[17,12.5],'Llegamos 12:30 mar 17']},
+    freeNote:'Sin Ámsterdam: el vuelo Roma → París no está buscado; supuse uno que sale 08:30 y llegamos al depto de París a las 12:30. Los precios de Ibiza y Roma son los de las fechas originales y pueden cambiar.'},
+};
+// Alojamiento por persona para las noches originales (planilla). Para 6: el mismo lugar dividido entre 6.
+// (valores con decimales para que el total dé igual que la planilla: USD 841 para 7)
+const LODGE_BASE = {bcn:{n:2,p7:141.8}, ibz:{n:2,p7:298.8}, rom:{n:3,p7:108.8}, ams:{n:3,p7:125.8}, par:{n:2,p7:165.8}};
+function lodgeExact(id,nights,pax){ const b=LODGE_BASE[id]; const pp = pax===7? b.p7 : b.p7*7/6; return pp*nights/b.n; }
+function lodgeCity(id,nights,pax){ return Math.round(lodgeExact(id,nights,pax)); }
+let CITIES=[], LEGS=[];
+function applyRoute(){
+  const R=ROUTES[state.route];
+  CITIES=R.stays.map(([id,from,to])=>({...CITY[id],id,from,to,nights:to-from}));
+  LEGS=R.legs;
+}
+const EUsum = m => LEGS.reduce((s,l)=>s+l[m],0);
+const lodgeTotal = pax => Math.round(CITIES.reduce((s,c)=>s+lodgeExact(c.id,c.nights,pax),0));
 
 const OPTS = {
   A:{name:'Air France + Ryanair', short:'Actual', color:'#8a8f9e',
@@ -604,29 +674,24 @@ const OPTS = {
      comment:'La tarifa ya incluye valija. Ojo: el último día en París se pierde porque el vuelo sale a la mañana.'},
 };
 
-const LODGES = [
-  {city:CITIES[0], dates:'08 → 10 ago · 2 noches', name:'Best location in BCN · Plaza Catalunya', via:'Airbnb', addr:'Eixample, al lado de Plaça Catalunya', p7:142, p8:124,
-   status:['good','Reservado'], cancel:'Cancelación gratis hasta el 25/07', url:'https://www.airbnb.com.ar/rooms/10170589', map:[41.38691,2.16872]},
-  {city:CITIES[1], dates:'10 → 12 ago · 2 noches', name:'Ibiza Sun Apartments', via:'Booking', addr:"Deessa Tanit 3, Playa d'en Bossa", p7:299, p8:298,
+const LODGES = {
+  bcn:{name:'Best location in BCN · Plaza Catalunya', via:'Airbnb', addr:'Eixample, al lado de Plaça Catalunya',
+   status:['good','Reservado'], cancel:'Cancelación gratis hasta el 25/07', sinNote:'Hay que sumar 2 noches a la reserva', url:'https://www.airbnb.com.ar/rooms/10170589', map:[41.38691,2.16872]},
+  ibz:{name:'Ibiza Sun Apartments', via:'Booking', addr:"Deessa Tanit 3, Playa d'en Bossa",
    status:['warn','Falta reservar'], cancel:'No reembolsable', url:'https://www.booking.com/hotel/es/ibiza-sun-apartments.es.html', map:[38.8913731,1.4067154]},
-  {city:CITIES[2], dates:'12 → 15 ago · 3 noches', name:'RomeyourHome @Termini', via:'Airbnb', addr:'Via Nino Bixio 41, Esquilino · 4º piso sin ascensor', p7:109, p8:210,
-   status:['good','Reservado (7)'], cancel:'Si somos 8: Gran Madonna dei Monti (Monti)', url:'https://www.airbnb.com.ar/rooms/23241909', url8:'https://www.airbnb.com.ar/rooms/40834948', map:[41.895,12.5095], map8:[41.89543,12.4901]},
-  {city:CITIES[3], dates:'15 → 18 ago · 3 noches', name:'A definir · referencia: Via Amsterdam', via:'Booking', addr:'20 Diemerhof, 1112 XN', p7:126, p8:105,
+  rom:{name:'RomeyourHome @Termini', via:'Airbnb', addr:'Via Nino Bixio 41, Esquilino · 4º piso sin ascensor',
+   status:['good','Reservado'], cancel:'Reservado para 7', sinNote:'Reservado del 12 al 15: hay que pasarlo al 14–17', url:'https://www.airbnb.com.ar/rooms/23241909', map:[41.895,12.5095]},
+  ams:{name:'A definir · referencia: Via Amsterdam', via:'Booking', addr:'20 Diemerhof, 1112 XN',
    status:['bad','Sin elegir'], cancel:'Precio de referencia', url:'https://www.booking.com/hotel/nl/via-amsterdam.es.html', map:[52.326207,4.953709]},
-  {city:CITIES[4], dates:'18 → 20 ago · 2 noches', name:'Depto para 8 cerca del Louvre', via:'Airbnb', addr:'1er arrondissement', p7:166, p8:145,
-   status:['warn','Cancelación 24 h'], cancel:'Solo 24 h de cancelación gratis', url:'https://www.airbnb.com.ar/rooms/615069', map:[48.8629,2.3347]},
-];
+  par:{name:'Depto para 8 cerca del Louvre', via:'Airbnb', addr:'1er arrondissement',
+   status:['warn','Cancelación 24 h'], cancel:'Solo 24 h de cancelación gratis', sinNote:'Hay que sumar 1 noche (17 al 20)', url:'https://www.airbnb.com.ar/rooms/615069', map:[48.8629,2.3347]},
+};
 
 const IBZ = [
   ['Hostal Ripoll',1556],['Ibiza Sun Apartments',2110,true],['Arlanza',2245],['Bon Sol',2311],['Heaven',2843]
 ];
 
 /* Tiempo libre: [día de agosto, hora decimal] llegada al alojamiento y salida */
-const FREE_COMMON = {
-  ibz:[[10,20.5],[12,6.5],'Llegamos 20:30 mar 10','Salimos 06:30 jue 12 (Wizz 08:25)'],
-  rom:[[12,12],[15,6],'Llegamos 12:00 jue 12','Salimos 06:00 dom 15 (ITA 08:30)'],
-  ams:[[15,12.5],[18,9.5],'Llegamos 12:30 dom 15','Salimos 09:30 mié 18 (Eurostar)'],
-};
 const FREE_OPT = {
   A:{bcn:[[8,0.25],'Llegamos 00:15 dom 08 (aterriza 22:45 sáb)'], parEnd:[[20,8.5],'Salimos 08:30 vie 20 (Ryanair desde Beauvais)'], back:[[20,15.25],[20,18.5],'Paseo 15:15–18:30 vie 20 antes del Air France 21:15']},
   B:{bcn:[[8,17.75],'Llegamos 17:45 dom 08 (aterriza 16:15)'], parEnd:[[20,7],'Salimos 07:00 vie 20 (Vueling desde Orly)'], back:[[20,12],[20,15.5],'Paseo 12:00–15:30 vie 20 antes del LATAM 18:15']},
@@ -645,11 +710,10 @@ function awake(a,b){ // horas entre 9 y 24 de cada día
 }
 function freeFor(k){
   const f=FREE_OPT[k], rows=[];
-  rows.push({c:CITIES[0], span:awake(f.bcn[0],[10,15.5]), when:[f.bcn[1],'Salimos 15:30 mar 10 (Vueling 18:15)']});
-  rows.push({c:CITIES[1], span:awake(...FREE_COMMON.ibz.slice(0,2)), when:FREE_COMMON.ibz.slice(2)});
-  rows.push({c:CITIES[2], span:awake(...FREE_COMMON.rom.slice(0,2)), when:FREE_COMMON.rom.slice(2)});
-  rows.push({c:CITIES[3], span:awake(...FREE_COMMON.ams.slice(0,2)), when:FREE_COMMON.ams.slice(2)});
-  rows.push({c:CITIES[4], span:awake([18,14.5],f.parEnd[0]), when:['Llegamos 14:30 mié 18',f.parEnd[1]]});
+  const R=ROUTES[state.route].free, cityOf=id=>CITIES.find(c=>c.id===id);
+  rows.push({c:cityOf('bcn'), span:awake(f.bcn[0],R.bcnEnd[0]), when:[f.bcn[1],R.bcnEnd[1]]});
+  R.mid.forEach(([id,a,b,w1,w2])=>rows.push({c:cityOf(id), span:awake(a,b), when:[w1,w2]}));
+  rows.push({c:cityOf('par'), span:awake(R.parStart[0],f.parEnd[0]), when:[R.parStart[1],f.parEnd[1]]});
   if(f.back) rows.push({c:{name:'Barcelona (vuelta)',color:'var(--bcn)',id:'bcn2'}, extra:true, span:awake(f.back[0],f.back[1]), when:[f.back[2]]});
   rows.forEach(r=>r.h=r.span.reduce((s,x)=>s+x[1],0));
   return rows;
@@ -666,7 +730,7 @@ const FLOJO = {
   D:'Se compra por agencia (GotoGate)',
   E:'Perdés el último día en París y 4 h de escala en Bogotá',
 };
-const state = {opt:'D', bag:true, pax:7};
+const state = {opt:'D', bag:true, pax:6, route:'con'};
 
 /* ======== utilidades ======== */
 const $ = s => document.querySelector(s);
@@ -682,7 +746,7 @@ function countTo(el, to){
   })(t0);
 }
 const mode = () => state.bag ? 'bag' : 'carry';
-function tripTotal(k){ return OPTS[k][mode()].total + EU[mode()] + LODGE[state.pax]; }
+function tripTotal(k){ return OPTS[k][mode()].total + EUsum(mode()) + lodgeTotal(state.pax); }
 
 /* ======== HERO: cielo animado ======== */
 (function sky(){
@@ -747,21 +811,20 @@ function drawMap(){
   for(let lon=0;lon<=15;lon+=5){const p=proj(55,lon),q=proj(36,lon); el('line',{x1:p.x,y1:p.y,x2:q.x,y2:q.y,class:'grat'}); el('text',{x:p.x+4,y:52,class:'grat-lbl'}).textContent=lon+'°E';}
   for(let lat=40;lat<=55;lat+=5){const p=proj(lat,-4),q=proj(lat,16); el('line',{x1:p.x,y1:p.y,x2:q.x,y2:q.y,class:'grat'}); el('text',{x:44,y:p.y-4,class:'grat-lbl'}).textContent=lat+'°N';}
   const pts = CITIES.map(c=>proj(c.lat,c.lon));
-  const legLbl = ['Vueling','Wizz Air','ITA','Eurostar'];
   const paths=[];
   for(let i=0;i<pts.length-1;i++){
     const a=pts[i], b=pts[i+1], mx=(a.x+b.x)/2, my=(a.y+b.y)/2, dx=b.x-a.x, dy=b.y-a.y;
-    const bend = i===3 ? .12 : .28;
+    const tr = !!(LEGS[i]&&LEGS[i].train); const bend = tr ? .12 : (LEGS[i]&&LEGS[i].from==='Roma'&&state.route==='sin' ? -.18 : .28);
     const cx=mx - dy*bend, cy=my + dx*bend;
     const d=`M${a.x},${a.y} Q${cx},${cy} ${b.x},${b.y}`;
-    const p=el('path',{d,class:'leg',stroke:CITIES[i+1].hex, 'stroke-dasharray': i===3?'4 6':'none'});
+    const p=el('path',{d,class:'leg',stroke:CITIES[i+1].hex, 'stroke-dasharray': tr?'4 6':'none'});
     paths.push(p);
     const lx=.25*a.x+.5*cx+.25*b.x, ly=.25*a.y+.5*cy+.25*b.y;
-    el('text',{x:lx+6,y:ly,class:'leg-lbl'}).textContent=legLbl[i];
+    el('text',{x:lx+6,y:ly,class:'leg-lbl'}).textContent=LEGS[i]?LEGS[i].carrier:'';
   }
   // regreso a BCN (según opción)
   const back = OPTS[state.opt].par;
-  const a=pts[4], b=pts[0];
+  const a=pts[pts.length-1], b=pts[0];
   const ret = el('path',{d:`M${a.x},${a.y} Q${a.x-70},${(a.y+b.y)/2} ${b.x},${b.y}`,class:'leg',stroke:'rgba(255,255,255,.45)','stroke-dasharray':'2 6',opacity: back?1:0});
   if(back){ el('text',{x:a.x-78,y:(a.y+b.y)/2+30,class:'leg-lbl',fill:'#fff'}).textContent=back.carrier+' a BCN'; }
   else { el('text',{x:a.x-150,y:a.y+38,class:'leg-lbl'}).textContent='Vuelta a BA desde París'; }
@@ -769,7 +832,7 @@ function drawMap(){
     const c=CITIES[i];
     el('circle',{cx:p.x,cy:p.y,r:7,fill:c.hex,class:'pulse'});
     el('circle',{cx:p.x,cy:p.y,r:7,fill:c.hex,stroke:'#121a3a','stroke-width':3});
-    const right = i===2 ? -1 : 1;
+    const right = c.id==='rom' ? -1 : 1;
     const tx = el('text',{x:p.x+14*right,y:p.y-4,class:'city-lbl','text-anchor':right<0?'end':'start'}); tx.textContent=c.name;
     const sub= el('text',{x:p.x+14*right,y:p.y+12,class:'city-sub','text-anchor':right<0?'end':'start'}); sub.textContent=`${String(c.from).padStart(2,'0')}–${c.to}/08 · ${c.nights} noches`;
   });
@@ -802,7 +865,7 @@ function playMapDraw(){
 function drawStops(){
   const box=$('#stops'); box.innerHTML='';
   CITIES.forEach((c,i)=>{
-    const L=LODGES[i];
+    const L=LODGES[c.id];
     box.insertAdjacentHTML('beforeend',`
       <div class="stop rv"><div class="bar" style="background:${c.color}"></div>
         <div><h3>${c.name}</h3><p>${String(c.from).padStart(2,'0')} → ${c.to} de agosto · ${L.name}</p><span class="free-h" id="fh-${c.id}"></span></div>
@@ -812,7 +875,7 @@ function drawStops(){
   const d=$('#days'); d.innerHTML='';
   const dn=['dom','lun','mar','mié','jue','vie','sáb'];
   for(let day=8; day<=20; day++){
-    const c=CITIES.find(c=>day>=c.from && day<c.to) || CITIES[4];
+    const c=CITIES.find(c=>day>=c.from && day<c.to) || CITIES[CITIES.length-1];
     const wd=dn[new Date(2027,7,day).getDay()];
     d.insertAdjacentHTML('beforeend',`<div class="day" style="background:${c.color}" title="${c.name}">${day}<small>${wd}</small></div>`);
   }
@@ -901,13 +964,13 @@ function drawDur(){
 function drawBudget(){
   const o=OPTS[state.opt], m=o[mode()], total=tripTotal(state.opt);
   countTo($('#tot'), total);
-  $('#tot-ctx').innerHTML = `Opción <b>${state.opt}</b> (${o.name}), ${state.bag?'con valija':'solo carry-on'}, <b>${state.pax} personas</b>.`
-    + (state.pax===8?' Con 8 cambia el depto de Roma y el resto se reparte entre más.':'');
+  $('#tot-ctx').innerHTML = `Opción <b>${state.opt}</b> (${o.name}), ${state.bag?'con valija':'solo carry-on'}, <b>${state.pax} personas</b>, ${ROUTES[state.route].label.toLowerCase()}.`
+    + (state.pax===6?' Para 6 calculé los mismos alojamientos divididos entre 6.':'');
   const parts=[
     ['Vuelo largo', m.long, '#f3b63b'],
     ['París → BCN + noche extra', m.par+m.night, '#f08a6a'],
-    ['Tramos dentro de Europa', EU[mode()], '#7fb0f0'],
-    ['Alojamiento (12 noches)', LODGE[state.pax], '#9ad4b4'],
+    ['Tramos dentro de Europa', EUsum(mode()), '#7fb0f0'],
+    ['Alojamiento (12 noches)', lodgeTotal(state.pax), '#9ad4b4'],
   ];
   const st=$('#stack');
   if(!st.children.length) parts.forEach(p=>st.insertAdjacentHTML('beforeend',`<div style="background:${p[2]};flex-grow:0"></div>`));
@@ -934,25 +997,22 @@ function drawBudget(){
 /* ======== ALOJAMIENTO ======== */
 function drawLodges(){
   const box=$('#lodges'); box.innerHTML='';
-  LODGES.forEach(L=>{
-    const eight = state.pax===8 && L.url8;
-    const name = eight ? 'Gran Madonna dei Monti' : L.name;
-    const addr = eight ? 'Monti, Roma' : L.addr;
-    const url = eight ? L.url8 : L.url;
-    const mp = eight ? L.map8 : L.map;
+  CITIES.forEach(c=>{
+    const L=LODGES[c.id], sin=state.route==='sin' && L.sinNote;
+    const pd=n=>String(n).padStart(2,'0');
     box.insertAdjacentHTML('beforeend',`
     <article class="lodge rv">
-      <div class="top" style="background:${L.city.color}"><small>${L.dates}</small><h3>${L.city.name}</h3></div>
+      <div class="top" style="background:${c.color}"><small>${pd(c.from)} → ${pd(c.to)} ago · ${c.nights} noches</small><h3>${c.name}</h3></div>
       <div class="body">
-        <div><div class="nm">${name}</div><div class="addr">${addr} · ${L.via}</div></div>
-        <div><span class="pill ${eight?'warn':L.status[0]}">${eight?'Opción para 8':L.status[1]}</span> <span class="carrier">${L.cancel}</span></div>
+        <div><div class="nm">${L.name}</div><div class="addr">${L.addr} · ${L.via}</div></div>
+        <div><span class="pill ${sin?'warn':L.status[0]}">${sin?'Cambia la reserva':L.status[1]}</span> <span class="carrier">${sin?L.sinNote:L.cancel}</span></div>
         <div class="pp">
-          <div style="${state.pax===7?'outline:2px solid var(--ink)':''}"><small>7 personas</small><b class="num">USD ${L.p7}</b></div>
-          <div style="${state.pax===8?'outline:2px solid var(--ink)':''}"><small>8 personas</small><b class="num">USD ${L.p8}</b></div>
+          <div style="${state.pax===6?'outline:2px solid var(--ink)':''}"><small>6 personas</small><b class="num">USD ${lodgeCity(c.id,c.nights,6)}</b></div>
+          <div style="${state.pax===7?'outline:2px solid var(--ink)':''}"><small>7 personas</small><b class="num">USD ${lodgeCity(c.id,c.nights,7)}</b></div>
         </div>
         <div class="links">
-          <a class="btn solid" href="${url}" target="_blank" rel="noopener">Ver en ${L.via} ↗</a>
-          <a class="btn" href="https://www.google.com/maps?q=${mp[0]},${mp[1]}" target="_blank" rel="noopener">Mapa ↗</a>
+          <a class="btn solid" href="${L.url}" target="_blank" rel="noopener">Ver en ${L.via} ↗</a>
+          <a class="btn" href="https://www.google.com/maps?q=${L.map[0]},${L.map[1]}" target="_blank" rel="noopener">Mapa ↗</a>
         </div>
       </div>
     </article>`);
@@ -961,8 +1021,11 @@ function drawLodges(){
 }
 
 /* ======== INFO ======== */
-function drawInfo(){
+function drawInfoLegs(){
   $('#legs').innerHTML = LEGS.map(l=>`<tr><td>${l.day}</td><td>${l.from} → ${l.to}<br><span class="carrier">${l.how}${l.note?' · '+l.note:''}</span></td><td class="r num">USD ${l.carry}</td><td class="r num">USD ${l.bag}</td></tr>`).join('');
+  $('#legs-sub').innerHTML=`<td></td><td><b>Subtotal</b></td><td class="r"><b>USD ${EUsum('carry')}</b></td><td class="r"><b>USD ${EUsum('bag')}</b></td>`;
+}
+function drawInfo(){
   const mx=Math.max(...IBZ.map(i=>i[1]));
   $('#ibz').innerHTML = IBZ.map(([n,v,sel])=>`<div class="ib${sel?' sel':''}"><span>${n}${sel?' <span class="pill good">elegido</span>':''}</span><div class="tr"><i style="width:${v/mx*100}%"></i></div><b class="num">${fmt(v)}</b></div>`).join('');
 }
@@ -1037,18 +1100,46 @@ function drawFree(){
   rows.forEach(r=>{ const t=document.getElementById('fh-'+r.c.id); if(t) t.textContent=fmtH(r.h)+' para pasear'; });
 }
 
+/* ======== barra fija y ruta ======== */
+function drawRoute(){
+  const pd=n=>String(n).padStart(2,'0');
+  $('#route-line').innerHTML = '<span class="chip">Buenos Aires</span><span class="arr">→</span>' +
+    CITIES.map(c=>`<span class="chip" style="border-color:${c.color}">${c.name}</span><span class="arr">→</span>`).join('') + '<span class="chip">Buenos Aires</span>';
+  $('#hero-sum').textContent = `${CITIES.length} ciudades · 12 noches · ${LEGS.length} tramos dentro de Europa`;
+  $('#ruta-h').textContent = `Doce noches, ${ROUTES[state.route].ciudades} ciudades`;
+  $('#free-note-route').textContent = ROUTES[state.route].freeNote;
+  drawStops(); drawInfoLegs();
+  observe(document.querySelectorAll('#stops .rv'));
+}
+function drawBar(){
+  document.querySelectorAll('#tb-route button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.route===state.route)));
+  document.querySelectorAll('#tb-pax button').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.pax===state.pax)));
+  const o=$('#tb-opt');
+  if(!o.children.length){ for(const k in OPTS) o.insertAdjacentHTML('beforeend',`<button type="button" data-k="${k}" aria-label="Vuelo opción ${k}: ${OPTS[k].name}">${k}</button>`); o.querySelectorAll('button').forEach(b=>b.onclick=()=>{state.opt=b.dataset.k;update();}); }
+  o.querySelectorAll('button').forEach(b=>{const on=b.dataset.k===state.opt; b.setAttribute('aria-pressed',String(on)); b.style.background=on?OPTS[b.dataset.k].color:'';});
+  $('#tb-bag').setAttribute('aria-checked',String(state.bag)); $('#tb-bag-txt').textContent=state.bag?'Con valija':'Sin valija';
+  const t=$('#tb-tot'), tot=tripTotal(state.opt);
+  if(+t.dataset.v!==tot){ countTo(t,tot); const w=t.closest('.tb-total'); w.classList.remove('bump'); void w.offsetWidth; w.classList.add('bump'); }
+}
+document.querySelectorAll('#tb-route button').forEach(b=>b.onclick=()=>{state.route=b.dataset.route;update();});
+document.querySelectorAll('#tb-pax button').forEach(b=>b.onclick=()=>{state.pax=+b.dataset.pax;update();});
+$('#tb-bag').onclick=()=>{state.bag=!state.bag;update();};
+
 /* ======== estado ======== */
 function update(){
+  applyRoute();
+  if(update._route!==state.route){ update._route=state.route; drawRoute(); drawMap._force=true; }
+  drawBar();
   document.querySelectorAll('[data-swpax]').forEach(b=>{const on=state.pax===8; b.setAttribute('aria-checked',String(on)); b.querySelector('.knob').textContent=state.pax; b.querySelector('.lbl-on').classList.toggle('on',on); b.querySelector('.lbl-off').classList.toggle('on',!on);});
   document.querySelectorAll('[data-sw]').forEach(b=>{b.setAttribute('aria-checked',String(state.bag)); b.querySelector('.lbl-on').classList.toggle('on',state.bag); b.querySelector('.lbl-off').classList.toggle('on',!state.bag);});
   document.querySelectorAll('#seg-bag button').forEach(b=>b.setAttribute('aria-pressed', String((b.dataset.bag==='1')===state.bag)));
   document.querySelectorAll('#seg-pax button').forEach(b=>b.setAttribute('aria-pressed', String(+b.dataset.pax===state.pax)));
   drawTabs(); drawItin(); drawBreakdown(); drawDur(); drawBudget(); drawLodges(); drawFree(); drawVerdict();
   const prevBack = drawMap._back; const back = !!OPTS[state.opt].par;
-  if(prevBack!==back || drawMap._first===undefined){ drawMap(); drawMap._first=1; drawMap._back=back; }
+  if(prevBack!==back || drawMap._first===undefined || drawMap._force){ drawMap(); drawMap._first=1; drawMap._back=back; if(drawMap._force && drawMap._played) playMapDraw(); drawMap._force=false; }
 }
 document.querySelectorAll('[data-sw]').forEach(b=>b.onclick=()=>{state.bag=!state.bag;update();});
-document.querySelectorAll('[data-swpax]').forEach(b=>b.onclick=()=>{state.pax=state.pax===7?8:7;update();});
+
 document.querySelectorAll('#seg-bag button').forEach(b=>b.onclick=()=>{state.bag=b.dataset.bag==='1';update();});
 document.querySelectorAll('#seg-pax button').forEach(b=>b.onclick=()=>{state.pax=+b.dataset.pax;update();});
 
@@ -1058,13 +1149,13 @@ const io = 'IntersectionObserver' in window && !REDUCED ? new IntersectionObserv
   es.forEach(e=>{
     if(!e.isIntersecting || seen.has(e.target)) return;
     seen.add(e.target);
-    if(e.target.id==='map'){ playMapDraw(); return; }
+    if(e.target.id==='map'){ drawMap._played=true; playMapDraw(); return; }
     e.target.classList.add('play');
   });
 },{threshold:.15}) : null;
 function observe(list){ if(io) list.forEach((el,i)=>{ el.style.animationDelay=(i%6*.07)+'s'; io.observe(el); }); }
 
-drawStops(); drawInfo(); update();
+drawInfo(); update();
 observe(document.querySelectorAll('.rv'));
 if(io) io.observe($('#map'));
 </script>
