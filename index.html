@@ -169,7 +169,7 @@ section{padding:64px 0}
 /* ---------- VEREDICTO ---------- */
 .verdict{display:grid;grid-template-columns:.9fr 1.1fr;gap:20px;margin-top:26px}
 .vcard{background:var(--ink);color:#f4f1ea;border-radius:22px;padding:26px;position:relative;overflow:hidden}
-.vcard::before{content:"";position:absolute;width:260px;height:260px;border-radius:50%;right:-80px;top:-80px;background:radial-gradient(circle,rgba(138,79,208,.55),transparent 70%);animation:glow 4s ease-in-out infinite alternate}
+.vcard::before{content:"";position:absolute;width:260px;height:260px;border-radius:50%;right:-80px;top:-80px;background:radial-gradient(circle,rgba(31,138,91,.6),transparent 70%);animation:glow 4s ease-in-out infinite alternate}
 @keyframes glow{to{transform:scale(1.25) translate(-20px,20px)}}
 .vcard .badge{display:inline-flex;gap:8px;align-items:center;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--sun)}
 .vcard .big{display:flex;gap:16px;align-items:center;margin:14px 0 6px;position:relative}
@@ -461,7 +461,7 @@ footer{padding:36px 0 60px;color:var(--muted);font-size:13px}
   <div class="wrap">
     <div class="eyebrow rv">Vuelos</div>
     <h2 class="h2 rv">Cinco formas de ir y volver</h2>
-    <p class="lead rv">Precios en USD por persona, buscados para 7 pasajeros. Elegí la opción, la valija y la cantidad de personas desde la barra de arriba; todo se recalcula.</p>
+    <p class="lead rv">Precios en USD por persona, buscados en Kayak el 23/11/2026 para 6 pasajeros. Elegí la opción, la valija y la cantidad de personas desde la barra de arriba; todo se recalcula.</p>
 
     <div class="swipe-hint">Deslizá para ver las 5 opciones →</div>
     <div class="opt-tabs" id="opt-tabs" role="group" aria-label="Opción de vuelo"></div>
@@ -568,7 +568,7 @@ footer{padding:36px 0 60px;color:var(--muted);font-size:13px}
       </div>
       <div class="panel rv">
         <h3>Ibiza: alternativas</h3>
-        <div class="sub">Total para el grupo, 2 noches (USD)</div>
+        <div class="sub">Total para el grupo, 2 noches (USD, búsqueda anterior para 7)</div>
         <div class="ibz-bars" id="ibz"></div>
       </div>
     </div>
@@ -576,7 +576,7 @@ footer{padding:36px 0 60px;color:var(--muted);font-size:13px}
 </section>
 
 <footer>
-  <div class="wrap">Datos tomados de la planilla “Viaje Europa agosto 2027 – Presupuesto y links”. Precios buscados en noviembre 2026; pueden cambiar. El precio con valija de la opción D se buscó para 1 pasajero. Sin Ámsterdam, el vuelo Roma → París es una estimación.</div>
+  <div class="wrap">Datos tomados de la planilla “Viaje Europa agosto 2027 – Presupuesto y links”. Precios actualizados en Kayak y Booking el 23/11/2026 para 6 pasajeros; pueden cambiar. El Eurostar todavía no está a la venta para agosto 2027 (precio anterior).</div>
 </footer>
 
 <script>
@@ -594,15 +594,15 @@ const ROUTES = {
   con:{label:'Con Ámsterdam', short:'Con AMS', ciudades:'cinco',
     stays:[['bcn',8,10],['ibz',10,12],['rom',12,15],['ams',15,18],['par',18,20]],
     legs:[
-      {day:'Mar 10/08', from:'Barcelona', to:'Ibiza', carrier:'Vueling', how:'Vueling 18:15 → 19:20', mode:'✈', carry:25, bag:84},
-      {day:'Jue 12/08', from:'Ibiza', to:'Roma (FCO)', carrier:'Wizz Air', how:'Wizz Air 08:25 → 10:20', mode:'✈', carry:34, bag:74},
-      {day:'Dom 15/08', from:'Roma', to:'Ámsterdam', carrier:'ITA', how:'ITA 08:30 → 11:00', mode:'✈', carry:109, bag:199, note:'con valija: Economy Flex'},
-      {day:'Mié 18/08', from:'Ámsterdam', to:'París Nord', carrier:'Eurostar', how:'Eurostar (tren)', mode:'🚆', train:true, carry:39, bag:39},
+      {day:'Mar 10/08', from:'Barcelona', to:'Ibiza', carrier:'Vueling', how:'Vueling 18:15 → 19:20', mode:'✈', carry:66, bag:66, note:'la tarifa con valija sale igual'},
+      {day:'Jue 12/08', from:'Ibiza', to:'Roma (FCO)', carrier:'Vueling', how:'Vueling 10:50 → 12:50', mode:'✈', carry:80, bag:83},
+      {day:'Dom 15/08', from:'Roma', to:'Ámsterdam', carrier:'ITA', how:'ITA 08:30 → 11:00', mode:'✈', carry:110, bag:196, note:'con valija: Economy Flex'},
+      {day:'Mié 18/08', from:'Ámsterdam', to:'París Nord', carrier:'Eurostar', how:'Eurostar (tren)', mode:'🚆', train:true, carry:39, bag:39, note:'precio anterior: todavía no está a la venta'},
     ],
     free:{bcnEnd:[[10,15.5],'Salimos 15:30 mar 10 (Vueling 18:15)'],
       mid:[
-        ['ibz',[10,20.5],[12,6.5],'Llegamos 20:30 mar 10','Salimos 06:30 jue 12 (Wizz 08:25)'],
-        ['rom',[12,12],[15,6],'Llegamos 12:00 jue 12','Salimos 06:00 dom 15 (ITA 08:30)'],
+        ['ibz',[10,20.5],[12,8.33],'Llegamos 20:30 mar 10','Salimos 08:20 jue 12 (Vueling 10:50)'],
+        ['rom',[12,14.33],[15,6],'Llegamos 14:20 jue 12','Salimos 06:00 dom 15 (ITA 08:30)'],
         ['ams',[15,12.5],[18,9.5],'Llegamos 12:30 dom 15','Salimos 09:30 mié 18 (Eurostar)'],
       ],
       parStart:[[18,14.5],'Llegamos 14:30 mié 18']},
@@ -610,22 +610,22 @@ const ROUTES = {
   sin:{label:'Sin Ámsterdam', short:'Sin AMS', ciudades:'cuatro',
     stays:[['bcn',8,12],['ibz',12,14],['rom',14,17],['par',17,20]],
     legs:[
-      {day:'Jue 12/08', from:'Barcelona', to:'Ibiza', carrier:'Vueling', how:'Vueling 18:15 → 19:20', mode:'✈', carry:25, bag:84, note:'precio de las fechas originales'},
-      {day:'Sáb 14/08', from:'Ibiza', to:'Roma (FCO)', carrier:'Wizz Air', how:'Wizz Air 08:25 → 10:20', mode:'✈', carry:34, bag:74, note:'precio de las fechas originales'},
-      {day:'Mar 17/08', from:'Roma', to:'París', carrier:'a buscar', how:'Vuelo a la mañana (a buscar)', mode:'✈', carry:80, bag:130, note:'precio estimado, no buscado'},
+      {day:'Jue 12/08', from:'Barcelona', to:'Ibiza', carrier:'Vueling', how:'Vueling 18:25 → 19:30', mode:'✈', carry:63, bag:63, note:'la tarifa con valija sale igual'},
+      {day:'Sáb 14/08', from:'Ibiza', to:'Roma (FCO)', carrier:'Vueling', how:'Vueling 10:50 → 12:50', mode:'✈', carry:107, bag:116},
+      {day:'Mar 17/08', from:'Roma', to:'París (Orly)', carrier:'Transavia', how:'Transavia 09:50 → 12:00', mode:'✈', carry:144, bag:144, note:'la tarifa con valija sale igual'},
     ],
-    free:{bcnEnd:[[12,15.5],'Salimos 15:30 jue 12 (Vueling 18:15)'],
+    free:{bcnEnd:[[12,15.67],'Salimos 15:40 jue 12 (Vueling 18:25)'],
       mid:[
-        ['ibz',[12,20.5],[14,6.5],'Llegamos 20:30 jue 12','Salimos 06:30 sáb 14 (Wizz 08:25)'],
-        ['rom',[14,12],[17,6],'Llegamos 12:00 sáb 14','Salimos 06:00 mar 17 (vuelo ~08:30, a confirmar)'],
+        ['ibz',[12,20.67],[14,8.33],'Llegamos 20:40 jue 12','Salimos 08:20 sáb 14 (Vueling 10:50)'],
+        ['rom',[14,14.33],[17,7.33],'Llegamos 14:20 sáb 14','Salimos 07:20 mar 17 (Transavia 09:50)'],
       ],
-      parStart:[[17,12.5],'Llegamos 12:30 mar 17']},
-    freeNote:'Sin Ámsterdam: el vuelo Roma → París no está buscado; supuse uno que sale 08:30 y llegamos al depto de París a las 12:30. Los precios de Ibiza y Roma son los de las fechas originales y pueden cambiar.'},
+      parStart:[[17,13.5],'Llegamos 13:30 mar 17']},
+    freeNote:'Sin Ámsterdam, el alojamiento de Ibiza usa el precio del 10 al 12; para el 12 al 14 puede cambiar.'},
 };
 // Alojamiento por persona para las noches originales (planilla). Para 6: el mismo lugar dividido entre 6.
 // (valores con decimales para que el total dé igual que la planilla: USD 841 para 7)
-const LODGE_BASE = {bcn:{n:2,p7:141.8}, ibz:{n:2,p7:298.8}, rom:{n:3,p7:108.8}, ams:{n:3,p7:125.8}, par:{n:2,p7:165.8}};
-function lodgeExact(id,nights,pax){ const b=LODGE_BASE[id]; const pp = pax===7? b.p7 : b.p7*7/6; return pp*nights/b.n; }
+const LODGE_BASE = {bcn:{n:2,p7:141.8}, ibz:{n:2,p7:336.6,p6:336.5}, rom:{n:3,p7:108.8}, ams:{n:3,p7:125.8}, par:{n:2,p7:165.8}};
+function lodgeExact(id,nights,pax){ const b=LODGE_BASE[id]; const pp = pax===7? b.p7 : (b.p6 ?? b.p7*7/6); return pp*nights/b.n; }
 function lodgeCity(id,nights,pax){ return Math.round(lodgeExact(id,nights,pax)); }
 let CITIES=[], LEGS=[];
 function applyRoute(){
@@ -637,36 +637,36 @@ const EUsum = m => LEGS.reduce((s,l)=>s+l[m],0);
 const lodgeTotal = pax => Math.round(CITIES.reduce((s,c)=>s+lodgeExact(c.id,c.nights,pax),0));
 
 const OPTS = {
-  A:{name:'Air France + Ryanair', short:'Actual', color:'#8a8f9e',
-     carry:{long:970, par:79, night:55, total:1104}, bag:{long:1087, par:61, night:55, total:1203},
+  A:{name:'Air France + Ryanair', short:'La más barata', color:'#8a8f9e',
+     carry:{long:969, par:62, night:55, total:1086}, bag:{long:1086, par:62, night:55, total:1203},
      idaDur:'17h 25m', idaMin:1045, vtaDur:'38h 25m', vtaMin:2305,
      ida:{date:'Sáb 07/08', carrier:'Air France', nodes:[['EZE','00:20 sáb 07'],['CDG','',"escala 2h40"],['BCN','22:45 sáb 07']]},
      par:{carrier:'Ryanair', nodes:[['BVA','12:35 vie 20'],['BCN','14:20']], note:'Sale de Beauvais, a ~1h15 de París'},
      vta:{date:'Vie 20/08', carrier:'Air France', nodes:[['BCN','21:15 vie 20'],['CDG','',"escala 14h05"],['EZE','22:00 sáb 21']]},
-     comment:'La que estaba en la planilla. La vuelta tiene una escala de 14 horas en París.'},
-  B:{name:'LATAM + Vueling', short:'La más segura', color:'#1f8a5b',
-     carry:{long:1013, par:118, night:0, total:1131}, bag:{long:1193, par:146, night:0, total:1339},
-     idaDur:'16h 55m', idaMin:1015, vtaDur:'29h 10m', vtaMin:1750,
-     ida:{date:'Sáb 07/08', carrier:'LATAM', nodes:[['AEP','18:20 sáb 07'],['GRU','',"escala 1h10"],['MAD','',"escala 1h40"],['BCN','16:15 dom 08']]},
-     par:{carrier:'Vueling', nodes:[['ORY','09:30 vie 20'],['BCN','11:10']], note:'Sale de Orly, más cerca del centro'},
-     vta:{date:'Vie 20/08', carrier:'LATAM', nodes:[['BCN','18:15 vie 20'],['MAD','',"escala 4h05"],['GRU','',"escala 1h25"],['AEP','09:40 sáb 21']]},
-     comment:'La alternativa segura: aerolíneas confiables, sale y llega a Aeroparque, y LATAM deja cancelar gratis en 24 h. Es la que menos horas libres deja.'},
+     comment:'La más barata, pero la vuelta tiene una escala de 14 horas en París y el tramo a Barcelona es con Ryanair desde Beauvais.'},
+  B:{name:'LATAM + Vueling', short:'1 escala por tramo', color:'#1f8a5b', rec:true,
+     carry:{long:1377, par:80, night:0, total:1457}, bag:{long:1388, par:80, night:0, total:1468},
+     idaDur:'16h 55m', idaMin:1015, vtaDur:'21h 00m', vtaMin:1260,
+     ida:{date:'Sáb 07/08', carrier:'LATAM', nodes:[['AEP','11:45 sáb 07'],['GRU','',"escala 3h40"],['BCN','09:40 dom 08']]},
+     par:{carrier:'Vueling', nodes:[['ORY','17:40 vie 20'],['BCN','19:20']], note:'Sale de Orly, más cerca del centro'},
+     vta:{date:'Vie 20/08', carrier:'LATAM', nodes:[['BCN','23:10 vie 20'],['GRU','',"escala 1h35"],['AEP','09:40 sáb 21']]},
+     comment:'LATAM cambió horarios: ahora es 1 sola escala en San Pablo por tramo, llega a Barcelona 09:40 del domingo y vuelve de noche. Sale y llega a Aeroparque y deja cancelar gratis en 24 h.'},
   C:{name:'LEVEL + Vueling', short:'Directo', color:'#d29a12',
-     carry:{long:1252, par:118, night:55, total:1425}, bag:{long:1431, par:127, night:55, total:1613},
-     idaDur:'12h 35m', idaMin:755, vtaDur:'27h 25m', vtaMin:1645,
+     carry:{long:1195, par:80, night:55, total:1330}, bag:{long:1443, par:80, night:55, total:1578},
+     idaDur:'12h 35m', idaMin:755, vtaDur:'27h 40m', vtaMin:1660,
      ida:{date:'Sáb 07/08', carrier:'LEVEL', nodes:[['EZE','18:05 sáb 07'],['BCN','11:40 dom 08']]},
-     par:{carrier:'Vueling', nodes:[['ORY','17:55 vie 20'],['BCN','19:35']], note:'Se duerme una noche más en Barcelona'},
+     par:{carrier:'Vueling', nodes:[['ORY','17:40 vie 20'],['BCN','19:20']], note:'Se duerme una noche más en Barcelona'},
      vta:{date:'Sáb 21/08', carrier:'LEVEL', nodes:[['BCN','07:55 sáb 21'],['EZE','16:20 sáb 21']]},
      comment:'Directo de ida y de vuelta. Hay que sumar una noche extra en Barcelona.'},
-  D:{name:'LEVEL + British Airways', short:'Ida directa, vuelve desde París', color:'#8a4fd0', rec:true,
-     carry:{long:1400, par:0, night:0, total:1400}, bag:{long:1459, par:0, night:0, total:1459},
-     idaDur:'12h 35m', idaMin:755, vtaDur:'19h 05m', vtaMin:1145,
+  D:{name:'LEVEL + SWISS', short:'Ida directa, vuelve desde París', color:'#8a4fd0',
+     carry:{long:1892, par:0, night:0, total:1892}, bag:{long:2101, par:0, night:0, total:2101},
+     idaDur:'12h 35m', idaMin:755, vtaDur:'20h 10m', vtaMin:1210,
      ida:{date:'Sáb 07/08', carrier:'LEVEL', nodes:[['EZE','18:05 sáb 07'],['BCN','11:40 dom 08']]},
      par:null,
-     vta:{date:'Vie 20/08', carrier:'British Airways', nodes:[['CDG','20:25 vie 20'],['LHR','',"escala 1h40"],['GRU','',"escala 1h35"],['AEP','10:30 sáb 21']]},
-     comment:'La que más vale la pena: ida directa y vuelta desde París, sin volver a Barcelona. Precio de Turismocity/GotoGate pagando en dólares.'},
+     vta:{date:'Vie 20/08', carrier:'SWISS', nodes:[['CDG','19:40 vie 20'],['ZRH','',"escala 1h40"],['GRU','',"escala 2h20"],['EZE','10:50 sáb 21']]},
+     comment:'Ida directa y vuelta desde París. Ya no está la combinación barata de agencia: hoy sale como dos pasajes de ida separados (LEVEL + SWISS, que reemplaza a British Airways por precio).'},
   E:{name:'Avianca', short:'Vuelve desde París a la mañana', color:'#e0782e',
-     carry:{long:1358, par:0, night:0, total:1358}, bag:{long:1358, par:0, night:0, total:1358},
+     carry:{long:1335, par:0, night:0, total:1335}, bag:{long:1335, par:0, night:0, total:1335},
      idaDur:'20h 35m', idaMin:1235, vtaDur:'20h 30m', vtaMin:1230,
      ida:{date:'Sáb 07/08', carrier:'Avianca', nodes:[['EZE','07:10 sáb 07'],['BOG','',"escala 4h05"],['BCN','08:45 dom 08']]},
      par:null,
@@ -677,8 +677,8 @@ const OPTS = {
 const LODGES = {
   bcn:{name:'Best location in BCN · Plaza Catalunya', via:'Airbnb', addr:'Eixample, al lado de Plaça Catalunya',
    status:['good','Reservado'], cancel:'Cancelación gratis hasta el 25/07', sinNote:'Hay que sumar 2 noches a la reserva', url:'https://www.airbnb.com.ar/rooms/10170589', map:[41.38691,2.16872]},
-  ibz:{name:'Ibiza Sun Apartments', via:'Booking', addr:"Deessa Tanit 3, Playa d'en Bossa",
-   status:['warn','Falta reservar'], cancel:'No reembolsable', url:'https://www.booking.com/hotel/es/ibiza-sun-apartments.es.html', map:[38.8913731,1.4067154]},
+  ibz:{name:'Ibiza Sun Apartments', via:'Booking', addr:"Deessa Tanit 3, Playa d'en Bossa · para 6: 2 Suite Junior",
+   status:['warn','Falta reservar'], cancel:'Ahora hay tarifa con cancelación gratis hasta el 27/07/2027', url:'https://www.booking.com/hotel/es/ibiza-sun-apartments.es.html', map:[38.8913731,1.4067154]},
   rom:{name:'RomeyourHome @Termini', via:'Airbnb', addr:'Via Nino Bixio 41, Esquilino · 4º piso sin ascensor',
    status:['good','Reservado'], cancel:'Reservado para 7', sinNote:'Reservado del 12 al 15: hay que pasarlo al 14–17', url:'https://www.airbnb.com.ar/rooms/23241909', map:[41.895,12.5095]},
   ams:{name:'A definir · referencia: Via Amsterdam', via:'Booking', addr:'20 Diemerhof, 1112 XN',
@@ -694,9 +694,9 @@ const IBZ = [
 /* Tiempo libre: [día de agosto, hora decimal] llegada al alojamiento y salida */
 const FREE_OPT = {
   A:{bcn:[[8,0.25],'Llegamos 00:15 dom 08 (aterriza 22:45 sáb)'], parEnd:[[20,8.5],'Salimos 08:30 vie 20 (Ryanair desde Beauvais)'], back:[[20,15.25],[20,18.5],'Paseo 15:15–18:30 vie 20 antes del Air France 21:15']},
-  B:{bcn:[[8,17.75],'Llegamos 17:45 dom 08 (aterriza 16:15)'], parEnd:[[20,7],'Salimos 07:00 vie 20 (Vueling desde Orly)'], back:[[20,12],[20,15.5],'Paseo 12:00–15:30 vie 20 antes del LATAM 18:15']},
-  C:{bcn:[[8,13.17],'Llegamos 13:10 dom 08 (aterriza 11:40)'], parEnd:[[20,15.5],'Salimos 15:30 vie 20 (Vueling 17:55)'], back:[[20,20.5],[21,5.5],'Noche extra: 20:30 vie 20 hasta el LEVEL 07:55 sáb']},
-  D:{bcn:[[8,13.17],'Llegamos 13:10 dom 08 (aterriza 11:40)'], parEnd:[[20,17.5],'Salimos 17:30 vie 20 (BA desde CDG 20:25)'], back:null},
+  B:{bcn:[[8,11.17],'Llegamos 11:10 dom 08 (aterriza 09:40)'], parEnd:[[20,15.17],'Salimos 15:10 vie 20 (Vueling 17:40 desde Orly)'], back:null},
+  C:{bcn:[[8,13.17],'Llegamos 13:10 dom 08 (aterriza 11:40)'], parEnd:[[20,15.17],'Salimos 15:10 vie 20 (Vueling 17:40)'], back:[[20,20.33],[21,5.5],'Noche extra: 20:20 vie 20 hasta el LEVEL 07:55 sáb']},
+  D:{bcn:[[8,13.17],'Llegamos 13:10 dom 08 (aterriza 11:40)'], parEnd:[[20,17.17],'Salimos 17:10 vie 20 (SWISS desde CDG 19:40)'], back:null},
   E:{bcn:[[8,10.25],'Llegamos 10:15 dom 08 (aterriza 08:45)'], parEnd:[[20,6],'Salimos 06:00 vie 20 (Avianca 08:55)'], back:null},
 };
 const DOW=['dom','lun','mar','mié','jue','vie','sáb'];
@@ -721,16 +721,16 @@ function freeFor(k){
 const freeTotal = k => freeFor(k).reduce((s,r)=>s+r.h,0);
 function fmtH(h){ const q=Math.round(h*4)/4, H=Math.floor(q), M=Math.round((q-H)*60); return M? `${H} h ${M}`:`${H} h`; }
 
-const TRAVEL = {A:3350,B:2765,C:2400,D:1900,E:2465}; // minutos ida + vuelta desde París
-const STOPS = {A:3,B:5,C:1,D:2,E:2}; // escalas + vuelos extra a BCN
+const TRAVEL = {A:3350,B:2275,C:2415,D:1965,E:2465}; // minutos ida + vuelta desde París
+const STOPS = {A:3,B:3,C:1,D:2,E:2}; // escalas + vuelos extra a BCN
 const FLOJO = {
   A:'Ryanair desde Beauvais y 14 h de escala en París',
-  B:'Menos horas en Barcelona y 2 escalas por tramo',
-  C:'La más cara y suma una noche en Barcelona',
-  D:'Se compra por agencia (GotoGate)',
+  B:'Hay que volver a Barcelona (Vueling) para tomar el vuelo de las 23:10',
+  C:'Suma una noche en Barcelona y con valija sale cara',
+  D:'La más cara: hoy sale como dos pasajes de ida separados',
   E:'Perdés el último día en París y 4 h de escala en Bogotá',
 };
-const state = {opt:'D', bag:true, pax:6, route:'con'};
+const state = {opt:'B', bag:true, pax:6, route:'con'};
 
 /* ======== utilidades ======== */
 const $ = s => document.querySelector(s);
@@ -1037,19 +1037,18 @@ function drawVerdict(){
   const fr=Object.fromEntries(ks.map(k=>[k,freeTotal(k)]));
   const hm=m=>`${Math.floor(m/60)} h${m%60?' '+String(m%60).padStart(2,'0'):''}`;
   const cheapest=ks.reduce((a,b)=>tot[a]<=tot[b]?a:b);
-  const dB=tot.D-tot.B, gainFree=fr.D-fr.B, gainTravel=(TRAVEL.B-TRAVEL.D)/60;
-  const perH = dB/(gainFree+gainTravel);
+    const dD=tot.D-tot.B, gainFreeD=fr.D-fr.B, dA=tot.B-tot.A, gainFreeA=fr.B-fr.A, lessTravelA=(TRAVEL.A-TRAVEL.B)/60;
   $('#vcard').innerHTML=`
     <div class="badge">★ La que más vale la pena</div>
-    <div class="big"><span class="letter">D</span><h3>LEVEL + British Airways<small>Ida directa a Barcelona, vuelta desde París</small></h3></div>
+    <div class="big"><span class="letter" style="background:#1f8a5b">B</span><h3>LATAM + Vueling<small>1 escala en San Pablo por tramo, desde Aeroparque</small></h3></div>
     <ul>
-      <li><span class="ic">$</span><span>Cuesta <b>USD ${fmt(dB)} más</b> que la B (${state.bag?'con valija':'solo carry-on'}, ${state.pax} personas) y te devuelve <b>${Math.round(gainFree)} h más para pasear</b> y <b>${Math.round(gainTravel)} h menos de viaje</b>. Pagás unos <b>USD ${fmt(perH)} por cada hora</b> que ganás.</span></li>
-      <li><span class="ic">✈</span><span><b>Ida directa de ${OPTS.D.idaDur}</b>: llegás a Barcelona a las 11:40 del domingo, con el día por delante.</span></li>
-      <li><span class="ic">⌛</span><span><b>La vuelta más corta: ${OPTS.D.vtaDur}</b> desde París. No hay que volver a Barcelona ni dormir una noche extra.</span></li>
-      <li><span class="ic">🗼</span><span><b>El último día en París es casi entero</b>: el vuelo sale 20:25, te vas del depto 17:30.</span></li>
+      <li><span class="ic">$</span><span>Cuesta <b>USD ${fmt(dA)} más</b> que la A, la más barata (${state.bag?'con valija':'solo carry-on'}, ${state.pax} personas), pero te ahorra <b>${Math.round(lessTravelA)} h de viaje</b>, sin la escala de 14 h en París ni Ryanair desde Beauvais.</span></li>
+      <li><span class="ic">✈</span><span><b>Llega a Barcelona 09:40 del domingo</b>, con el día entero por delante. Una sola escala de ${OPTS.B.ida.nodes[1][2].replace('escala ','')} en San Pablo.</span></li>
+      <li><span class="ic">⌛</span><span><b>Vuelta de noche</b>: Vueling París → Barcelona 17:40 y LATAM 23:10, llegás a Aeroparque 09:40 del sábado.</span></li>
+      <li><span class="ic">↩</span><span><b>LATAM deja cancelar gratis 24 h</b> si se compra en su web.</span></li>
     </ul>
-    <div class="cav"><b>Antes de comprar:</b> el precio con valija lo busqué para 1 pasajero, hay que confirmarlo para ${state.pax}. Se compra por agencia, así que cambiar o cancelar es más difícil que en la web de una aerolínea.</div>
-    <div class="alt">Si querés lo más seguro y barato: <b>la B (LATAM)</b>, que deja cancelar gratis 24 h. La más barata de todas es la ${cheapest}${cheapest==='A'?', pero tiene Ryanair y 38 h de vuelta':''}.</div>`;
+    <div class="cav"><b>La que antes convenía (D) ya no:</b> la combinación barata de agencia desapareció y hoy sale <b>USD ${fmt(dD)} más</b> que la B por persona${gainFreeD>0?`, por solo ${Math.round(gainFreeD)} h libres más`:''}.</div>
+    <div class="alt">Para ahorrar sin sufrir: <b>la E (Avianca)</b> sale USD ${fmt(tot.B-tot.E)} ${tot.E<=tot.B?'menos':'más'}, con valija incluida, pero se pierde el último día en París. Directo: <b>la C</b> (LEVEL), USD ${fmt(Math.abs(tot.C-tot.B))} ${tot.C>=tot.B?'más':'menos'} que la B.</div>`;
   const cols=[
     ['Total viaje',k=>tot[k],v=>'USD '+fmt(v),'min'],
     ['Horas libres',k=>fr[k],v=>Math.round(v)+' h','max'],
@@ -1058,7 +1057,7 @@ function drawVerdict(){
   ];
   let h='<thead><tr><th>Opción</th>'+cols.map(c=>`<th>${c[0]}</th>`).join('')+'<th style="text-align:left">Punto flojo</th></tr></thead><tbody>';
   ks.forEach(k=>{
-    h+=`<tr class="${k==='D'?'sel':''}"><td><span class="lt" style="background:${OPTS[k].color}">${k}</span>${OPTS[k].name.split(' + ')[0]}</td>`;
+    h+=`<tr class="${k==='B'?'sel':''}"><td><span class="lt" style="background:${OPTS[k].color}">${k}</span>${OPTS[k].name.split(' + ')[0]}</td>`;
     cols.forEach(([,f,fm,dir])=>{
       const vals=ks.map(f), v=f(k), best=dir==='min'?Math.min(...vals):Math.max(...vals), worst=dir==='min'?Math.max(...vals):Math.min(...vals);
       h+=`<td class="num ${v===best?'best':v===worst?'worst':''}">${fm(v)}</td>`;
